@@ -1291,6 +1291,20 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         </div>
       </div>
 
+
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <p class="cta-pitch">
+          Récupérer une partie de ces coûts, c'est <strong>libérer de la trésorerie</strong>, <em>financer un recrutement</em>, ou <strong>dégager de la capacité d'investissement</strong> — sans chercher de nouveaux clients.<br><br>
+          <strong>Notre accompagnement n'est pas qu'une simple variable d'ajustement managérial — c'est une réelle stratégie économique.</strong>
+        </p>
+        <a href="https://hemergence.com/contact" class="cta-btn" id="cta-btn">
+          Aller plus loin ensemble
+        </a>
+        <span class="cta-sub">Diagnostic complet · Données réelles · Sans engagement</span>
+      </div>
+
       <!-- BREAKDOWN -->
       <div class="breakdown">
         <div class="breakdown-title">Décomposition estimée — fourchette par poste</div>
@@ -1368,16 +1382,97 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         </div>
       </div>
 
+      </div>
+
+
+
       <!-- CTA -->
       <div class="cta-section">
         <p class="cta-pitch">
           Récupérer une partie de ces coûts, c'est <strong>libérer de la trésorerie</strong>, <em>financer un recrutement</em>, ou <strong>dégager de la capacité d'investissement</strong> — sans chercher de nouveaux clients.<br><br>
           <strong>Notre accompagnement n'est pas qu'une simple variable d'ajustement managérial — c'est une réelle stratégie économique.</strong>
         </p>
-        <a href="#contact" class="cta-btn" id="cta-btn">
-          Aller plus loin ensemble →
+        <a href="https://hemergence.com/contact" class="cta-btn" id="cta-btn">
+          Aller plus loin ensemble
         </a>
         <span class="cta-sub">Diagnostic complet · Données réelles · Sans engagement</span>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-title">Décomposition estimée — fourchette par poste</div>
+        <div class="bd-row">
+          <span class="bd-left"><span class="bd-dot" style="background:#5dade2"></span>Turnover & recrutement</span>
+          <span class="bd-right"><strong id="bd-turn-mid">—</strong> <span id="bd-turn-range" style="font-size:11px;opacity:0.55;"></span></span>
+        </div>
+        <div class="bd-row">
+          <span class="bd-left"><span class="bd-dot" style="background:#e67e22"></span>Absentéisme</span>
+          <span class="bd-right"><strong id="bd-abs-mid">—</strong> <span id="bd-abs-range" style="font-size:11px;opacity:0.55;"></span></span>
+        </div>
+        <div class="bd-row">
+          <span class="bd-left"><span class="bd-dot" style="background:#9b59b6"></span>Désengagement</span>
+          <span class="bd-right"><strong id="bd-deseng-mid">—</strong> <span id="bd-deseng-range" style="font-size:11px;opacity:0.55;"></span></span>
+        </div>
+        <div class="bd-row">
+          <span class="bd-left"><span class="bd-dot" style="background:#62c1c1"></span>Présentéisme</span>
+          <span class="bd-right"><strong id="bd-pres-mid">—</strong> <span id="bd-pres-range" style="font-size:11px;opacity:0.55;"></span></span>
+        </div>
+      </div>
+
+      <!-- DISCLAIMER -->
+      <div class="disclaimer">
+        <div class="disc-title">Comment ce chiffre est-il calculé ?</div>
+        <p class="disc-body">
+          Les salaires utilisés dans ce calcul sont les <strong>salaires moyens 2024 par secteur d'activité</strong>, issus des données DARES/INSEE 2024 (salaire brut moyen chargé incluant les cotisations patronales). Services : 36 400 € · Commerce : 33 200 € · Restauration : 28 600 € · Santé : 34 100 € · Industrie : 38 800 €.
+        </p>
+        <p class="disc-body">
+          Les résultats sont présentés en <strong>fourchette basse – fourchette haute</strong> pour refléter l'incertitude inhérente à toute estimation extrapolée depuis des moyennes sectorielles. La réalité de votre entreprise peut se situer en dehors de ces bornes.
+        </p>
+        <p class="disc-body">
+          Il s'agit d'un <strong>ordre de grandeur, pas d'un audit comptable</strong>. Un diagnostic approfondi avec vos données réelles permet d'affiner ces chiffres et d'identifier les leviers prioritaires pour votre situation.
+        </p>
+
+        <button class="method-btn" id="method-btn" onclick="toggleMethod()">
+          <span id="method-lbl">Voir le détail de la méthodologie</span>
+          <span class="arr">▼</span>
+        </button>
+
+        <div class="method-detail" id="method-detail">
+          <table class="method-table">
+            <tr>
+              <td>Salaires de référence</td>
+              <td>Salaire moyen brut chargé 2024 par secteur (DARES/INSEE 2024), incluant charges patronales (~45%). Utilisé comme base pour tous les calculs de coûts unitaires. Non modifiable dans cette version — le diagnostic complet intègre vos données réelles.<span class="src">Source : DARES Analyses — Salaires dans le secteur privé 2024 · INSEE Enquête ACEMO 2024</span></td>
+            </tr>
+            <tr>
+              <td>Turnover & recrutement</td>
+              <td>Coût de remplacement : <strong>35% à 100%</strong> du salaire annuel chargé (fourchette basse = postes peu qualifiés, haute = postes qualifiés). Durée de vacance du poste : 3 mois. Si le nombre de départs est laissé vide, la moyenne nationale sectorielle est appliquée (DARES 2024).<span class="src">Source : Deloitte Global Human Capital Trends 2024 · Robert Half Salary Guide 2024 · HBR The Business Case for Employee Retention 2019</span></td>
+            </tr>
+            <tr>
+              <td>Absentéisme</td>
+              <td>Taux par secteur : Services 4,0% · Commerce 4,8% · Restauration 5,5% · Santé 5,2% · Industrie 3,8%. Modulé selon Q6 et Q4. Coefficient de désorganisation : ×1,5 (bas) à ×2,5 (haut) — la partie visible (maintien de salaire) ne représente que 20% du coût réel.<span class="src">Source : APICIL Observatoire 2025 · Malakoff Humanis 2024 · AXA Datascope 2026</span></td>
+            </tr>
+            <tr>
+              <td>Désengagement</td>
+              <td>Taux de base : 23% (Gallup France 2024). Modulé par Q4 : 10/10 → ~10% · 5/10 → 23% · 1/10 → ~40%. Perte de productivité : 20% (bas) à 34% (haut). L'absentéisme est exclu de ce poste pour éviter le double-compte.<span class="src">Source : Gallup State of the Global Workplace 2024 · Mozart Consulting IBET 2024</span></td>
+            </tr>
+            <tr>
+              <td>Présentéisme</td>
+              <td>2 740 €/salarié/an (Malakoff Humanis 2024). Appliqué à 60% de l'effectif (fourchette basse) à 100% (haute). Distinct du désengagement — il désigne les salariés présents mais sous-productifs pour raison de santé.<span class="src">Source : Malakoff Humanis Baromètre Absentéisme 2024</span></td>
+            </tr>
+            <tr>
+              <td>Indice de risque — pondération</td>
+              <td>L'indice de risque Hémergence est un composite de 4 variables, pondérées selon le calibrage terrain Hémergence : <strong>% du CA absorbé (35%)</strong> · <strong>taux de turnover (30%)</strong> · <strong>taux d'absentéisme réel (20%)</strong> · <strong>ambiance déclarée (15%)</strong>. Ces pondérations ne sont pas issues d'une étude académique publiée — elles reflètent les observations d'Hémergence sur ses accompagnements en PME. Elles sont assumées comme telles et documentées en toute transparence. Le seuil max retenu : 20% du CA, 30% de turnover, 15% d'absentéisme (3,4× la moyenne nationale de 4,4%).<span class="src">Calibrage Hémergence — expérience terrain, non publié</span></td>
+            </tr>
+            <tr>
+              <td>Seuils du cadran</td>
+              <td>Vert &lt;5% · Jaune 5–10% · Orange 10–17% · Rouge &gt;17% du CA. Une PME tertiaire sans dysfonctionnement majeur se situe généralement entre 5% et 10% — c'est la zone d'observation, pas d'alerte.<span class="src">Source : Mozart Consulting IBET 2024 · Bpifrance Le Lab · Gallup 2023</span></td>
+            </tr>
+            <tr>
+              <td>Amplitude de la fourchette (×1,3)</td>
+              <td>La fourchette haute est calculée comme la fourchette basse multipliée par <strong>1,3</strong>. Cette amplitude de 30% reflète l'incertitude inhérente à toute estimation basée sur des moyennes sectorielles, sans audit terrain. Elle est volontairement conservatrice : suffisamment large pour être honnête sur la nature estimative de l'outil, suffisamment serrée pour rester lisible et crédible face à un dirigeant ou un DAF. Une amplitude plus faible (×1,2) supposerait une précision que 7 questions ne peuvent pas garantir. Une amplitude plus large (×1,5 ou ×2) fragiliserait la crédibilité de l'estimation.<span class="src">Choix méthodologique Hémergence — calibré sur la dispersion observée dans les études Deloitte 2024, Malakoff Humanis 2024 et IBET 2024</span></td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
 
