@@ -302,7 +302,7 @@ select.filled { border-color: var(--cyan); background-color: var(--blanc); }
   color: var(--gris-txt);
   white-space: nowrap;
   font-weight: 400;
-  min-width: 70px;
+  min-width: 60px;
 }
 
 .slider-end-label:last-child { text-align: right; }
@@ -1022,22 +1022,74 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 520px) {
-  .mini-gauges-row { grid-template-columns: 1fr; gap: 20px; }
-  .risque-niveau { font-size: 22px; }
-  .risque-zones { grid-template-columns: repeat(2,1fr); gap: 6px; }
-  .card, .phase-2.visible { padding: 24px 16px; }
-  .phase-2 { padding: 0 16px; overflow-x: hidden; }
-  .phase-2.visible { padding: 24px 16px; }
-  .kpis { grid-template-columns: 1fr; }
-  .kpi { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .kpi:last-child { border-bottom: none; }
+
+  /* Empêche tout débordement horizontal */
+  body, .main { overflow-x: hidden; }
+  .main { padding-left: 12px; padding-right: 12px; }
+
+  /* Hero & logo */
   h1 { font-size: 26px; }
-  .hero { padding: 48px 20px 60px; }
-  .logo-bar { padding: 10px 16px; } .logo-bar-img { height: 40px; } .logo-bar-brand { font-size: 12px; }
+  .hero { padding: 48px 16px 60px; }
+  .logo-bar { padding: 10px 16px; }
+  .logo-bar-img { height: 40px; }
+  .logo-bar-brand { font-size: 12px; }
+
+  /* Cards */
+  .card { padding: 20px 16px; }
+
+  /* Phase 2 — correction principale du débordement */
+  .phase-2 {
+    padding: 0 16px;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .phase-2.visible { padding: 20px 16px; }
+
+  /* Slider : réduction des min-width pour éviter le débordement */
+  .slider-row { gap: 8px; }
+  .slider-end-label {
+    font-size: 10px;
+    min-width: 44px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+  .slider-val {
+    font-size: 18px;
+    min-width: 40px;
+  }
+
+  /* Grilles de boutons → 1 colonne sur mobile */
+  .q4sal-layout { grid-template-columns: 1fr; }
   .q6-layout { grid-template-columns: 1fr; }
-  .cta-section { padding: 24px 20px; }
-  .breakdown, .disclaimer { padding: 18px 20px; }
-  .result-header { padding: 24px 20px 20px; }
+
+  /* Boutons toggle */
+  .toggle-btn { font-size: 12px; padding: 10px 10px; }
+
+  /* KPIs résultats */
+  .kpis { grid-template-columns: 1fr; }
+  .kpi { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 18px 12px; }
+  .kpi:last-child { border-bottom: none; }
+  .kpi-low, .kpi-high { font-size: 15px; }
+
+  /* Mini jauges */
+  .mini-gauges-row { grid-template-columns: 1fr; gap: 20px; }
+
+  /* Indice de risque */
+  .risque-niveau { font-size: 22px; }
+  .risque-zones { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .risque-zone { font-size: 8px; }
+  .risque-wrap { padding: 0 2px; }
+
+  /* Sections résultat */
+  .result-header { padding: 20px 16px 16px; }
+  .cta-section { padding: 20px 16px; }
+  .breakdown { padding: 16px 16px; }
+  .disclaimer { padding: 18px 16px; }
+
+  /* Lignes bd-row : passer en colonne si le texte est long */
+  .bd-left { font-size: 11px; }
+  .bd-right { font-size: 12px; }
 }
 </style>
 </head>
@@ -1336,7 +1388,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
           Récupérer une partie de ces coûts, c'est <strong>libérer de la trésorerie</strong>, <em>financer un recrutement</em>, ou <strong>dégager de la capacité d'investissement</strong> — sans chercher de nouveaux clients.<br><br>
           <strong>Notre accompagnement n'est pas qu'une simple variable d'ajustement managérial — c'est une réelle stratégie économique.</strong>
         </p>
-        <a href="mailto:edouard.houyelle@hemergence.com?subject=Diagnostic RH — Je souhaite aller plus loin&body=Bonjour,%0A%0AJ'ai réalisé le diagnostic RH sur votre site et je souhaite en savoir plus sur votre accompagnement.%0A%0ACordialement" class="cta-btn" id="cta-btn">
+        <a href="/cdn-cgi/l/email-protection#a2c7c6cdd7c3d0c68ccacdd7dbc7cecec7e2cac7cfc7d0c5c7ccc1c78cc1cdcf9dd1d7c0c8c7c1d69fe6cbc3c5cccdd1d6cbc182f0ea8240223682e8c782d1cdd7cac3cbd6c782c3cecec7d082d2ced7d182cecdcbcc84c0cdc6db9fe0cdccc8cdd7d08e8792e38792e3e885c3cb82d0610bc3cecbd1610b82cec782c6cbc3c5cccdd1d6cbc182f0ea82d1d7d082d4cdd6d0c782d1cbd6c782c7d682c8c782d1cdd7cac3cbd6c782c7cc82d1c3d4cdcbd082d2ced7d182d1d7d082d4cdd6d0c782c3c1c1cdcfd2c3c5ccc7cfc7ccd68c8792e38792e3e1cdd0c6cbc3cec7cfc7ccd6" class="cta-btn" id="cta-btn">
           Aller plus loin ensemble
         </a>
         <span class="cta-sub">Diagnostic complet · Données réelles · Sans engagement</span>
@@ -1429,7 +1481,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   © Hémergence · Développement humain au service de la performance · hemergence.com
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 let absMode = null;
 let arretsNbVal = null;
 let salMode = null;
@@ -1792,15 +1844,4 @@ function onInput() {
 }
 
 function toggleMethod() {
-  const btn=document.getElementById('method-btn');
-  const det=document.getElementById('method-detail');
-  const lbl=document.getElementById('method-lbl');
-  btn.classList.toggle('open');
-  det.classList.toggle('open');
-  lbl.textContent=btn.classList.contains('open')?'Masquer la m\u00e9thodologie':'Voir le d\u00e9tail de la m\u00e9thodologie';
-}
-
-updateSlider();
-</script>
-</body>
-</html>
+  const btn=document.getElementById
