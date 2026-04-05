@@ -410,6 +410,8 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.7s ease, opacity 0.55s ease, padding 0.5s ease;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .phase-2.visible {
@@ -984,6 +986,18 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 .card:nth-child(2) { animation-delay: 0.1s; }
 .card:nth-child(3) { animation-delay: 0.2s; }
 
+/* ── Q4 PÉRIODE DÉPARTS ── */
+.toggle-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 520px) {
+  .toggle-group { grid-template-columns: 1fr; }
+}
+
 /* ── Q4 SALAIRE ── */
 .q4sal-layout {
   display: grid;
@@ -1011,7 +1025,9 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   .mini-gauges-row { grid-template-columns: 1fr; gap: 20px; }
   .risque-niveau { font-size: 22px; }
   .risque-zones { grid-template-columns: repeat(2,1fr); gap: 6px; }
-  .card, .phase-2.visible { padding: 24px 20px; }
+  .card, .phase-2.visible { padding: 24px 16px; }
+  .phase-2 { padding: 0 16px; overflow-x: hidden; }
+  .phase-2.visible { padding: 24px 16px; }
   .kpis { grid-template-columns: 1fr; }
   .kpi { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .kpi:last-child { border-bottom: none; }
@@ -1035,7 +1051,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-eyebrow">Autodiagnostic RH · 7 questions · 5 minutes</div>
+  <div class="hero-eyebrow">Autodiagnostic RH · 8 questions · 5 minutes</div>
   <h1>À combien s'élèvent vos <strong>coûts cachés RH</strong> ?</h1>
   <p class="hero-pitch">
     Turnover, absentéisme, désengagement — ces coûts n'apparaissent pas toujours en comptabilité.<br>
@@ -1053,7 +1069,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill"></div>
     </div>
-    <span class="progress-label" id="progress-label">0 / 7 réponses</span>
+    <span class="progress-label" id="progress-label">0 / 8 réponses</span>
   </div>
 
   <!-- CARD 1 — LES ESSENTIELS -->
@@ -1095,8 +1111,29 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         </div>
       </div>
 
-      <div class="q-item">
+      <!-- Q04 — période départs, visible si departs > 0 -->
+      <div class="q-item q-periode" id="q-periode" style="display:none;">
         <div class="q-num">04</div>
+        <div class="q-label">Ces départs ont eu lieu...</div>
+        <div class="q-hint">Permet d'ajuster le coût selon que les postes sont encore vacants ou déjà pourvus.</div>
+        <div class="toggle-group">
+          <div class="toggle-btn periode-btn" onclick="selectPeriode('recent',this)">
+            Récemment<br>
+            <span style="font-size:10px;opacity:0.65;font-weight:300;">moins de 3 mois</span>
+          </div>
+          <div class="toggle-btn periode-btn" onclick="selectPeriode('milieu',this)">
+            Dans l'année<br>
+            <span style="font-size:10px;opacity:0.65;font-weight:300;">3 à 9 mois</span>
+          </div>
+          <div class="toggle-btn periode-btn" onclick="selectPeriode('ancien',this)">
+            Il y a plus de 9 mois<br>
+            <span style="font-size:10px;opacity:0.65;font-weight:300;">coûts majoritairement absorbés</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <div class="q-num">05</div>
         <div class="q-label">Quel est le salaire brut mensuel moyen de vos collaborateurs ?</div>
         <div class="q-hint">Cette donnée est utilisée pour calculer le coût réel de chaque dysfonctionnement — tous les postes (turnover, absentéisme, désengagement) sont des multiples du salaire chargé.</div>
         <div class="q4sal-layout">
@@ -1136,7 +1173,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
     <div class="q-grid">
 
       <div class="q-item">
-        <div class="q-num">05</div>
+        <div class="q-num">06</div>
         <div class="q-label">Comment évaluez-vous la motivation et l'ambiance dans votre équipe ?</div>
         <div class="q-hint">Votre ressenti global, vos observations au quotidien</div>
         <div class="slider-row" style="margin-top:8px;">
@@ -1148,7 +1185,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
       </div>
 
       <div class="q-item">
-        <div class="q-num">06</div>
+        <div class="q-num">07</div>
         <div class="q-label">Dans quel secteur exercez-vous ?</div>
         <div class="q-hint">Influence les taux de référence d'absentéisme et de turnover</div>
         <select id="secteur" onchange="onInput()">
@@ -1163,7 +1200,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
       </div>
 
       <div class="q-item">
-        <div class="q-num">07</div>
+        <div class="q-num">08</div>
         <div class="q-label">Combien avez-vous eu de jours d'arrêt en tout dans votre équipe sur les 12 derniers mois ?</div>
         <div class="q-hint">Si vous avez le chiffre exact, renseignez-le. Sinon, choisissez l'option la plus proche ci-dessous.</div>
         <div class="q6-layout">
@@ -1352,7 +1389,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             </tr>
             <tr>
               <td>Turnover & recrutement</td>
-              <td>Coût de remplacement : <strong>35% à 100%</strong> du salaire annuel chargé (fourchette basse = postes peu qualifiés, haute = postes qualifiés). Durée de vacance du poste : 3 mois. Si le nombre de départs est laissé vide, la moyenne nationale sectorielle est appliquée (DARES 2024).<span class="src">Source : Deloitte Global Human Capital Trends 2024 · Robert Half Salary Guide 2024 · HBR The Business Case for Employee Retention 2019</span></td>
+              <td>Coût de remplacement : <strong>35% à 100%</strong> du salaire annuel chargé (fourchette basse = postes peu qualifiés, haute = postes qualifiés). Durée de vacance du poste : 3 mois. Si le nombre de départs est laissé vide, la moyenne nationale sectorielle est appliquée (DARES 2024).<span class="src">Source : Deloitte Global Human Capital Trends 2024 · Robert Half Salary Guide 2024 · HBR The Business Case for Employee Retention 2019. Le coût est pondéré selon la période des départs déclarée : ×1,2 si départs récents (&lt;3 mois), ×1,0 si dans l'année, ×0,6 si antérieurs à 9 mois — reflétant le fait que les coûts de recrutement et de carence sont décroissants dans le temps.</span></td>
             </tr>
             <tr>
               <td>Absentéisme</td>
@@ -1364,7 +1401,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
             </tr>
             <tr>
               <td>Présentéisme</td>
-              <td>2 740 €/salarié/an (Malakoff Humanis 2024). Appliqué à 60% de l'effectif (fourchette basse) à 100% (haute). Distinct du désengagement — il désigne les salariés présents mais sous-productifs pour raison de santé.<span class="src">Source : Malakoff Humanis Baromètre Absentéisme 2024</span></td>
+              <td>2 740 €/salarié/an (Malakoff Humanis 2024). Le coefficient d'application est modulé par l'ambiance déclarée : de 30% (ambiance excellente) à 100% (ambiance très dégradée). La fourchette haute reste à 100% de l'effectif. <strong>Ce coût est incompressible à zéro</strong> : même sans turnover, sans absence et avec une ambiance maximale, il subsiste un coût résiduel lié aux comportements humains et au déficit d'engagement managérial incompressible — fatigue, dispersion, micro-inefficacités quotidiennes que ni les chiffres de paie ni les tableaux de bord RH ne capturent. C'est la part irréductible du facteur humain.<span class="src">Source : Malakoff Humanis Baromètre Absentéisme 2024 · Gallup State of the Global Workplace 2024</span></td>
             </tr>
             <tr>
               <td>Indice de risque — pondération</td>
@@ -1383,98 +1420,6 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
       </div>
 
       </div>
-
-
-
-      <!-- CTA -->
-      <div class="cta-section">
-        <p class="cta-pitch">
-          Récupérer une partie de ces coûts, c'est <strong>libérer de la trésorerie</strong>, <em>financer un recrutement</em>, ou <strong>dégager de la capacité d'investissement</strong> — sans chercher de nouveaux clients.<br><br>
-          <strong>Notre accompagnement n'est pas qu'une simple variable d'ajustement managérial — c'est une réelle stratégie économique.</strong>
-        </p>
-        <a href="mailto:edouard.houyelle@hemergence.com?subject=Diagnostic RH — Je souhaite aller plus loin&body=Bonjour,%0A%0AJ'ai réalisé le diagnostic RH sur votre site et je souhaite en savoir plus sur votre accompagnement.%0A%0ACordialement" class="cta-btn" id="cta-btn">
-          Aller plus loin ensemble
-        </a>
-        <span class="cta-sub">Diagnostic complet · Données réelles · Sans engagement</span>
-      </div>
-
-      <!-- BREAKDOWN -->
-      <div class="breakdown">
-        <div class="breakdown-title">Décomposition estimée — fourchette par poste</div>
-        <div class="bd-row">
-          <span class="bd-left"><span class="bd-dot" style="background:#5dade2"></span>Turnover & recrutement</span>
-          <span class="bd-right"><strong id="bd-turn-mid">—</strong> <span id="bd-turn-range" style="font-size:11px;opacity:0.55;"></span></span>
-        </div>
-        <div class="bd-row">
-          <span class="bd-left"><span class="bd-dot" style="background:#e67e22"></span>Absentéisme</span>
-          <span class="bd-right"><strong id="bd-abs-mid">—</strong> <span id="bd-abs-range" style="font-size:11px;opacity:0.55;"></span></span>
-        </div>
-        <div class="bd-row">
-          <span class="bd-left"><span class="bd-dot" style="background:#9b59b6"></span>Désengagement</span>
-          <span class="bd-right"><strong id="bd-deseng-mid">—</strong> <span id="bd-deseng-range" style="font-size:11px;opacity:0.55;"></span></span>
-        </div>
-        <div class="bd-row">
-          <span class="bd-left"><span class="bd-dot" style="background:#62c1c1"></span>Présentéisme</span>
-          <span class="bd-right"><strong id="bd-pres-mid">—</strong> <span id="bd-pres-range" style="font-size:11px;opacity:0.55;"></span></span>
-        </div>
-      </div>
-
-      <!-- DISCLAIMER -->
-      <div class="disclaimer">
-        <div class="disc-title">Comment ce chiffre est-il calculé ?</div>
-        <p class="disc-body">
-          Les salaires utilisés dans ce calcul sont les <strong>salaires moyens 2024 par secteur d'activité</strong>, issus des données DARES/INSEE 2024 (salaire brut moyen chargé incluant les cotisations patronales). Services : 36 400 € · Commerce : 33 200 € · Restauration : 28 600 € · Santé : 34 100 € · Industrie : 38 800 €.
-        </p>
-        <p class="disc-body">
-          Les résultats sont présentés en <strong>fourchette basse – fourchette haute</strong> pour refléter l'incertitude inhérente à toute estimation extrapolée depuis des moyennes sectorielles. La réalité de votre entreprise peut se situer en dehors de ces bornes.
-        </p>
-        <p class="disc-body">
-          Il s'agit d'un <strong>ordre de grandeur, pas d'un audit comptable</strong>. Un diagnostic approfondi avec vos données réelles permet d'affiner ces chiffres et d'identifier les leviers prioritaires pour votre situation.
-        </p>
-
-        <button class="method-btn" id="method-btn" onclick="toggleMethod()">
-          <span id="method-lbl">Voir le détail de la méthodologie</span>
-          <span class="arr">▼</span>
-        </button>
-
-        <div class="method-detail" id="method-detail">
-          <table class="method-table">
-            <tr>
-              <td>Salaires de référence</td>
-              <td>Salaire moyen brut chargé 2024 par secteur (DARES/INSEE 2024), incluant charges patronales (~45%). Utilisé comme base pour tous les calculs de coûts unitaires. Non modifiable dans cette version — le diagnostic complet intègre vos données réelles.<span class="src">Source : DARES Analyses — Salaires dans le secteur privé 2024 · INSEE Enquête ACEMO 2024</span></td>
-            </tr>
-            <tr>
-              <td>Turnover & recrutement</td>
-              <td>Coût de remplacement : <strong>35% à 100%</strong> du salaire annuel chargé (fourchette basse = postes peu qualifiés, haute = postes qualifiés). Durée de vacance du poste : 3 mois. Si le nombre de départs est laissé vide, la moyenne nationale sectorielle est appliquée (DARES 2024).<span class="src">Source : Deloitte Global Human Capital Trends 2024 · Robert Half Salary Guide 2024 · HBR The Business Case for Employee Retention 2019</span></td>
-            </tr>
-            <tr>
-              <td>Absentéisme</td>
-              <td>Taux par secteur : Services 4,0% · Commerce 4,8% · Restauration 5,5% · Santé 5,2% · Industrie 3,8%. Modulé selon Q6 et Q4. Coefficient de désorganisation : ×1,5 (bas) à ×2,5 (haut) — la partie visible (maintien de salaire) ne représente que 20% du coût réel.<span class="src">Source : APICIL Observatoire 2025 · Malakoff Humanis 2024 · AXA Datascope 2026</span></td>
-            </tr>
-            <tr>
-              <td>Désengagement</td>
-              <td>Taux de base : 23% (Gallup France 2024). Modulé par Q4 : 10/10 → ~10% · 5/10 → 23% · 1/10 → ~40%. Perte de productivité : 20% (bas) à 34% (haut). L'absentéisme est exclu de ce poste pour éviter le double-compte.<span class="src">Source : Gallup State of the Global Workplace 2024 · Mozart Consulting IBET 2024</span></td>
-            </tr>
-            <tr>
-              <td>Présentéisme</td>
-              <td>2 740 €/salarié/an (Malakoff Humanis 2024). Appliqué à 60% de l'effectif (fourchette basse) à 100% (haute). Distinct du désengagement — il désigne les salariés présents mais sous-productifs pour raison de santé.<span class="src">Source : Malakoff Humanis Baromètre Absentéisme 2024</span></td>
-            </tr>
-            <tr>
-              <td>Indice de risque — pondération</td>
-              <td>L'indice de risque Hémergence est un composite de 4 variables, pondérées selon le calibrage terrain Hémergence : <strong>% du CA absorbé (35%)</strong> · <strong>taux de turnover (30%)</strong> · <strong>taux d'absentéisme réel (20%)</strong> · <strong>ambiance déclarée (15%)</strong>. Ces pondérations ne sont pas issues d'une étude académique publiée — elles reflètent les observations d'Hémergence sur ses accompagnements en PME. Elles sont assumées comme telles et documentées en toute transparence. Le seuil max retenu : 20% du CA, 30% de turnover, 15% d'absentéisme (3,4× la moyenne nationale de 4,4%).<span class="src">Calibrage Hémergence — expérience terrain, non publié</span></td>
-            </tr>
-            <tr>
-              <td>Seuils du cadran</td>
-              <td>Vert &lt;5% · Jaune 5–10% · Orange 10–17% · Rouge &gt;17% du CA. Une PME tertiaire sans dysfonctionnement majeur se situe généralement entre 5% et 10% — c'est la zone d'observation, pas d'alerte.<span class="src">Source : Mozart Consulting IBET 2024 · Bpifrance Le Lab · Gallup 2023</span></td>
-            </tr>
-            <tr>
-              <td>Amplitude de la fourchette (×1,3)</td>
-              <td>La fourchette haute est calculée comme la fourchette basse multipliée par <strong>1,3</strong>. Cette amplitude de 30% reflète l'incertitude inhérente à toute estimation basée sur des moyennes sectorielles, sans audit terrain. Elle est volontairement conservatrice : suffisamment large pour être honnête sur la nature estimative de l'outil, suffisamment serrée pour rester lisible et crédible face à un dirigeant ou un DAF. Une amplitude plus faible (×1,2) supposerait une précision que 7 questions ne peuvent pas garantir. Une amplitude plus large (×1,5 ou ×2) fragiliserait la crédibilité de l'estimation.<span class="src">Choix méthodologique Hémergence — calibré sur la dispersion observée dans les études Deloitte 2024, Malakoff Humanis 2024 et IBET 2024</span></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
 
   </div><!-- /result-card -->
 
@@ -1487,7 +1432,8 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 <script>
 let absMode = null;
 let arretsNbVal = null;
-let salMode = null;   // 'moy' | 'haut' | 'bas' | null (exact saisi)
+let salMode = null;
+let periodeMode = null; // 'recent' | 'milieu' | 'ancien' | null   // 'moy' | 'haut' | 'bas' | null (exact saisi)
 let salExactVal = null; // valeur brute mensuelle exacte en €
 
 const SAL_SECTEUR = {
@@ -1559,6 +1505,26 @@ function selectSal(val, el) {
   onInput();
 }
 
+function selectPeriode(val, el) {
+  periodeMode = val;
+  document.querySelectorAll('.periode-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  onInput();
+}
+
+function maybeRevealPeriode() {
+  const dep = parseFloat(document.getElementById('departs').value)||0;
+  const q = document.getElementById('q-periode');
+  if (!q) return;
+  if (dep > 0) {
+    q.style.display = 'block';
+  } else {
+    q.style.display = 'none';
+    periodeMode = null;
+    document.querySelectorAll('.periode-btn').forEach(b=>b.classList.remove('active'));
+  }
+}
+
 function onArretsNb() {
   const v = document.getElementById('arrets-nb').value;
   if (v !== '') {
@@ -1579,10 +1545,12 @@ function selectAbs(val, el) {
 }
 
 function updateProgress() {
+  const depVal = parseFloat(document.getElementById('departs').value)||0;
   const checks = [
     parseFloat(document.getElementById('effectif').value)>0,
     (()=>{const el=document.getElementById('ca');return parseFloat((el.dataset.raw||el.value).replace(/[^0-9]/g,''))>0;})(),
     document.getElementById('departs').value!=='',
+    depVal===0||periodeMode!==null, // Q4 période : obligatoire seulement si départs > 0
     salMode!==null||salExactVal!==null,
     parseInt(document.getElementById('ambiance').value)!==5,
     document.getElementById('secteur').value!=='',
@@ -1590,7 +1558,7 @@ function updateProgress() {
   ];
   const n=checks.filter(Boolean).length;
   document.getElementById('progress-fill').style.width=(n/6*100)+'%';
-  document.getElementById('progress-label').textContent=n+' / 7 réponses';
+  document.getElementById('progress-label').textContent=n+' / 8 réponses';
 }
 
 function maybeRevealPhase2() {
@@ -1723,9 +1691,13 @@ function calculate() {
   }
   const nbDep = dep!==null?dep:Math.round(eff*(ABS_TAUX_SECTEUR[sec]||0.15));
 
-  // 1. TURNOVER
-  const turnLow  = nbDep*sal*0.35+(ca/eff/12)*3*nbDep*0.4;
-  const turnHigh = nbDep*sal*1.00+(ca/eff/12)*3*nbDep*1.0;
+  // 1. TURNOVER — modulé par la période des départs
+  // recent (<3 mois) → ×1.2 (coûts plein pot, postes vacants)
+  // milieu (3-9 mois) → ×1.0 (référence)
+  // ancien (>9 mois) → ×0.6 (coûts majoritairement absorbés)
+  const periodeCoef = periodeMode==='recent' ? 1.2 : periodeMode==='ancien' ? 0.6 : 1.0;
+  const turnLow  = (nbDep*sal*0.35+(ca/eff/12)*3*nbDep*0.4) * periodeCoef;
+  const turnHigh = (nbDep*sal*1.00+(ca/eff/12)*3*nbDep*1.0) * periodeCoef;
 
   // 2. ABSENTÉISME
   // Si jours exacts saisis : on les utilise directement sans cap ni taux intermédiaire
@@ -1751,8 +1723,11 @@ function calculate() {
   const desHigh = nDes*sal*0.34;
 
   // 4. PRÉSENTÉISME
-  const presLow  = eff*2740*0.60;
-  const presHigh = eff*2740*1.00;
+  // Modulé par l'ambiance : 10/10 → 30% (coût résiduel biologique incompressible)
+  // 5/10 → ~69% (moyenne nationale) · 1/10 → 100%
+  const presCoef = 0.30 + (10 - amb) / 9 * 0.70;
+  const presLow  = eff * 2740 * presCoef;
+  const presHigh = eff * 2740 * 1.00;
 
   // Fourchette basse : calcul détaillé par poste
   // Fourchette haute : total bas × 1.3 (amplitude de 30% — incertitude raisonnable sans audit)
@@ -1811,6 +1786,7 @@ function onInput() {
   const sel=document.getElementById('secteur');
   if(sel.value) sel.classList.add('filled');
   updateProgress();
+  maybeRevealPeriode();
   maybeRevealPhase2();
   calculate();
 }
