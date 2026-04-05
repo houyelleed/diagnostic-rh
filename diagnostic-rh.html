@@ -302,7 +302,7 @@ select.filled { border-color: var(--cyan); background-color: var(--blanc); }
   color: var(--gris-txt);
   white-space: nowrap;
   font-weight: 400;
-  min-width: 60px;
+  min-width: 44px;
 }
 
 .slider-end-label:last-child { text-align: right; }
@@ -1022,74 +1022,28 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 520px) {
-
-  /* Empêche tout débordement horizontal */
-  body, .main { overflow-x: hidden; }
-  .main { padding-left: 12px; padding-right: 12px; }
-
-  /* Hero & logo */
-  h1 { font-size: 26px; }
-  .hero { padding: 48px 16px 60px; }
-  .logo-bar { padding: 10px 16px; }
-  .logo-bar-img { height: 40px; }
-  .logo-bar-brand { font-size: 12px; }
-
-  /* Cards */
-  .card { padding: 20px 16px; }
-
-  /* Phase 2 — correction principale du débordement */
-  .phase-2 {
-    padding: 0 16px;
-    overflow-x: hidden;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .phase-2.visible { padding: 20px 16px; }
-
-  /* Slider : réduction des min-width pour éviter le débordement */
-  .slider-row { gap: 8px; }
-  .slider-end-label {
-    font-size: 10px;
-    min-width: 44px;
-    white-space: normal;
-    line-height: 1.2;
-  }
-  .slider-val {
-    font-size: 18px;
-    min-width: 40px;
-  }
-
-  /* Grilles de boutons → 1 colonne sur mobile */
-  .q4sal-layout { grid-template-columns: 1fr; }
-  .q6-layout { grid-template-columns: 1fr; }
-
-  /* Boutons toggle */
-  .toggle-btn { font-size: 12px; padding: 10px 10px; }
-
-  /* KPIs résultats */
-  .kpis { grid-template-columns: 1fr; }
-  .kpi { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 18px 12px; }
-  .kpi:last-child { border-bottom: none; }
-  .kpi-low, .kpi-high { font-size: 15px; }
-
-  /* Mini jauges */
+  body { overflow-x: hidden; }
+  .main { overflow-x: hidden; padding-left: 12px; padding-right: 12px; }
   .mini-gauges-row { grid-template-columns: 1fr; gap: 20px; }
-
-  /* Indice de risque */
   .risque-niveau { font-size: 22px; }
-  .risque-zones { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-  .risque-zone { font-size: 8px; }
-  .risque-wrap { padding: 0 2px; }
-
-  /* Sections résultat */
-  .result-header { padding: 20px 16px 16px; }
-  .cta-section { padding: 20px 16px; }
-  .breakdown { padding: 16px 16px; }
-  .disclaimer { padding: 18px 16px; }
-
-  /* Lignes bd-row : passer en colonne si le texte est long */
-  .bd-left { font-size: 11px; }
-  .bd-right { font-size: 12px; }
+  .risque-zones { grid-template-columns: repeat(2,1fr); gap: 6px; }
+  .card, .phase-2.visible { padding: 24px 16px; }
+  .phase-2 { padding: 0 16px; overflow-x: hidden; width: 100%; box-sizing: border-box; }
+  .phase-2.visible { padding: 24px 16px; }
+  .kpis { grid-template-columns: 1fr; }
+  .kpi { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .kpi:last-child { border-bottom: none; }
+  h1 { font-size: 26px; }
+  .hero { padding: 48px 20px 60px; }
+  .logo-bar { padding: 10px 16px; } .logo-bar-img { height: 40px; } .logo-bar-brand { font-size: 12px; }
+  .q6-layout { grid-template-columns: 1fr; }
+  .q4sal-layout { grid-template-columns: 1fr; }
+  .slider-row { gap: 8px; }
+  .slider-end-label { min-width: 40px; white-space: normal; font-size: 10px; line-height: 1.2; }
+  .slider-val { font-size: 18px; min-width: 36px; }
+  .cta-section { padding: 24px 20px; }
+  .breakdown, .disclaimer { padding: 18px 20px; }
+  .result-header { padding: 24px 20px 20px; }
 }
 </style>
 </head>
@@ -1388,7 +1342,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
           Récupérer une partie de ces coûts, c'est <strong>libérer de la trésorerie</strong>, <em>financer un recrutement</em>, ou <strong>dégager de la capacité d'investissement</strong> — sans chercher de nouveaux clients.<br><br>
           <strong>Notre accompagnement n'est pas qu'une simple variable d'ajustement managérial — c'est une réelle stratégie économique.</strong>
         </p>
-        <a href="/cdn-cgi/l/email-protection#a2c7c6cdd7c3d0c68ccacdd7dbc7cecec7e2cac7cfc7d0c5c7ccc1c78cc1cdcf9dd1d7c0c8c7c1d69fe6cbc3c5cccdd1d6cbc182f0ea8240223682e8c782d1cdd7cac3cbd6c782c3cecec7d082d2ced7d182cecdcbcc84c0cdc6db9fe0cdccc8cdd7d08e8792e38792e3e885c3cb82d0610bc3cecbd1610b82cec782c6cbc3c5cccdd1d6cbc182f0ea82d1d7d082d4cdd6d0c782d1cbd6c782c7d682c8c782d1cdd7cac3cbd6c782c7cc82d1c3d4cdcbd082d2ced7d182d1d7d082d4cdd6d0c782c3c1c1cdcfd2c3c5ccc7cfc7ccd68c8792e38792e3e1cdd0c6cbc3cec7cfc7ccd6" class="cta-btn" id="cta-btn">
+        <a href="/cdn-cgi/l/email-protection#4b2e2f243e2a392f6523243e322e27272e0b232e262e392c2e25282e6528242674383e29212e283f760f222a2c2524383f22286b19036ba9cbdf6b012e6b38243e232a223f2e6b2a27272e396b3b273e386b272422256d29242f327609242521243e39676e7b0a6e7b0a016c2a226b3988e22a27223888e26b272e6b2f222a2c2524383f22286b19036b383e396b3d243f392e6b38223f2e6b2e3f6b212e6b38243e232a223f2e6b2e256b382a3d2422396b3b273e386b383e396b3d243f392e6b2a282824263b2a2c252e262e253f656e7b0a6e7b0a0824392f222a272e262e253f" class="cta-btn" id="cta-btn">
           Aller plus loin ensemble
         </a>
         <span class="cta-sub">Diagnostic complet · Données réelles · Sans engagement</span>
