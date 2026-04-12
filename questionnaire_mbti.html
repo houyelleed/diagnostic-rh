@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionnaire MBTI</title>
+<style>
+  :root {
+    --blue: #225378; --blue-light: #2e6d9e; --blue-pale: #e8f1f7;
+    --blue-mid: #c2d8e8; --text: #1a1a2e; --text-light: #555;
+    --white: #ffffff; --border: #d0e0ec; --radius: 10px;
+    --shadow: 0 2px 12px rgba(34,83,120,0.10);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #f4f8fb; color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header { background: var(--blue); color: var(--white); padding: 28px 40px; }
+  .header-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; }
+  .header-left { flex: 1; }
+  header h1 { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+  header p.subtitle { font-size: 0.95rem; opacity: 0.85; font-weight: 300; }
+  .header-logo { flex-shrink: 0; margin-left: 32px; background: var(--white); border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; }
+  .header-logo img { height: 64px; width: auto; display: block; }
+
+  /* PROGRESS */
+  .progress-wrapper { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 40px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(34,83,120,0.07); }
+  .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 0.78rem; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; }
+  .progress-count { font-size: 0.78rem; color: var(--text-light); }
+  .progress-track { width: 100%; height: 6px; background: var(--blue-pale); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width 0.5s cubic-bezier(.4,0,.2,1); width: 0%; }
+
+  /* MAIN */
+  main { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* INTRO */
+  #page-intro { display: block; }
+  .intro-prerequis { background: var(--white); border: 3px solid var(--blue); border-radius: var(--radius); padding: 22px 28px; margin: 30px 0 0; text-align: center; }
+  .intro-prerequis p { color: var(--blue); font-size: 1.1rem; font-weight: 700; line-height: 1.6; letter-spacing: 0.1px; }
+  .intro-device { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin: 10px 0 0; font-size: 0.88rem; color: var(--text-light); line-height: 1.65; display: flex; gap: 12px; align-items: flex-start; text-align: justify; }
+  .intro-box { background: var(--blue-pale); border-left: 5px solid var(--blue); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 14px 0 0; font-size: 0.93rem; line-height: 1.7; color: var(--text); text-align: justify; }
+  .intro-box ol { margin-top: 12px; margin-left: 20px; }
+  .intro-box ol li { margin-bottom: 6px; }
+  .intro-timing { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin: 14px 0 0; font-size: 0.88rem; color: var(--text-light); line-height: 1.65; display: flex; gap: 12px; align-items: flex-start; text-align: justify; }
+  .start-area { text-align: center; margin-top: 32px; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* SECTION */
+  .section-label { display: flex; align-items: center; gap: 12px; margin: 30px 0 16px; }
+  .section-label span.bar { display: block; width: 5px; height: 32px; background: var(--blue); border-radius: 3px; }
+  .section-label h2 { font-size: 1rem; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: 1.2px; }
+  .section-instruction { font-size: 0.93rem; color: var(--text); font-weight: 600; margin-bottom: 20px; padding: 14px 18px; background: var(--blue-pale); border-left: 5px solid var(--blue); border-radius: 0 var(--radius) var(--radius) 0; line-height: 1.6; }
+  .section-instruction::before { content: "Lisez attentivement avant de répondre - "; color: var(--blue); font-weight: 700; }
+
+  /* QUESTION CARD */
+  .question-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 12px; box-shadow: var(--shadow); transition: border-color 0.2s, box-shadow 0.2s; }
+  .question-card:hover { border-color: var(--blue-mid); box-shadow: 0 4px 18px rgba(34,83,120,0.13); }
+  .question-card.answered { border-left: 4px solid var(--blue); }
+  .question-number { font-size: 0.75rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
+  .question-text { font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 14px; line-height: 1.55; }
+  .concept-title { font-size: 0.85rem; font-weight: 700; color: var(--blue); margin-bottom: 10px; letter-spacing: 0.5px; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 10px 14px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--white); font-size: 0.9rem; color: var(--text); transition: background 0.15s, border-color 0.15s, color 0.15s; line-height: 1.45; }
+  .option-label:hover { background: var(--blue-pale); border-color: var(--blue-light); }
+  .option-label input[type="radio"] { display: none; }
+  .option-label .radio-circle { width: 18px; height: 18px; min-width: 18px; border: 2px solid var(--blue-mid); border-radius: 50%; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s, background 0.15s; flex-shrink: 0; }
+  .option-label input[type="radio"]:checked + .radio-circle { border-color: var(--blue); background: var(--blue); box-shadow: inset 0 0 0 4px var(--white); }
+  .option-label:has(input[type="radio"]:checked) { background: var(--blue-pale); border-color: var(--blue); color: var(--blue); font-weight: 500; }
+  .option-letter { font-weight: 700; color: var(--blue); min-width: 16px; }
+
+  /* WORD PAIR - compact height only */
+  .word-pair { display: flex; gap: 12px; }
+  .word-pair .option-label { flex: 1; justify-content: center; text-align: center; flex-direction: row; align-items: center; padding: 8px 16px; gap: 10px; }
+  .word-pair .option-label .radio-circle { margin: 0; }
+  .word-pair .option-label .option-letter { display: none; }
+  .word-pair-card { padding: 10px 24px !important; margin-bottom: 8px !important; }
+
+  /* NAV */
+  .nav-area { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; gap: 12px; }
+  .btn { padding: 14px 36px; font-size: 0.95rem; font-weight: 700; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; border-radius: 50px; cursor: pointer; letter-spacing: 0.4px; transition: background 0.2s, transform 0.1s, box-shadow 0.2s; border: none; }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { background: var(--blue); color: var(--white); box-shadow: 0 4px 16px rgba(34,83,120,0.25); }
+  .btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(34,83,120,0.30); }
+  .btn-secondary { background: var(--white); color: var(--blue); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { background: var(--blue-pale); border-color: var(--blue-mid); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+  .unanswered-msg { color: #c0392b; font-size: 0.88rem; margin-top: 10px; text-align: center; display: none; }
+
+  /* RESULTS */
+  #page-results { display: none; }
+  #page-results.active { display: block; }
+  .results-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 32px; margin-top: 30px; box-shadow: var(--shadow); }
+  .results-card h2 { font-size: 1.3rem; font-weight: 700; color: var(--blue); margin-bottom: 8px; text-align: center; }
+  .results-card .result-subtitle { text-align: center; font-size: 0.9rem; color: var(--text-light); margin-bottom: 32px; }
+  .gauge-container { margin-bottom: 28px; }
+  .gauge-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .gauge-label-left, .gauge-label-right { font-size: 0.95rem; font-weight: 700; color: var(--blue); letter-spacing: 0.5px; }
+  .gauge-label-left span.pct, .gauge-label-right span.pct { font-size: 0.82rem; font-weight: 400; color: var(--text-light); margin-left: 4px; }
+  .gauge-track { position: relative; height: 14px; background: var(--blue-pale); border-radius: 7px; overflow: hidden; }
+  .gauge-track::after { content: ''; position: absolute; left: 50%; top: 0; width: 2px; height: 100%; background: var(--blue-mid); transform: translateX(-50%); z-index: 2; }
+  .gauge-fill-left { position: absolute; right: 50%; top: 0; height: 100%; background: var(--blue); border-radius: 7px 0 0 7px; transition: width 1s cubic-bezier(.4,0,.2,1); width: 0; }
+  .gauge-fill-right { position: absolute; left: 50%; top: 0; height: 100%; background: var(--blue-light); border-radius: 0 7px 7px 0; transition: width 1s cubic-bezier(.4,0,.2,1); width: 0; }
+  .result-disclaimer { font-size: 0.875rem; color: var(--text-light); font-style: italic; line-height: 1.65; margin-bottom: 14px; max-width: 560px; margin-left: auto; margin-right: auto; text-align: center; }
+  .result-type-label { font-size: 0.9rem; color: var(--text-light); margin-bottom: 8px; margin-top: 20px; }
+  .result-type { text-align: center; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .type-code { font-size: 2.2rem; font-weight: 800; color: var(--blue); letter-spacing: 6px; }
+
+  @media (max-width: 560px) {
+    header { padding: 24px 18px 20px; } header h1 { font-size: 1.5rem; }
+    .progress-wrapper { padding: 12px 18px; } main { padding: 0 12px 40px; }
+    .question-card { padding: 16px 14px; } .word-pair { flex-direction: column; }
+    .nav-area { flex-direction: column-reverse; } .btn { width: 100%; text-align: center; }
+    .header-logo img { height: 44px; }
+  }
+
+  /* ── ÉCRAN DE FIN ── */
+  .end-screen { max-width: 600px; margin: 40px auto 0; }
+  .end-teaser {
+    background: var(--blue);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .end-teaser h2 { font-size: 1.45rem; font-weight: 700; margin-bottom: 14px; line-height: 1.35; }
+  .end-teaser p { font-size: 0.92rem; opacity: 0.88; line-height: 1.65; }
+  .end-teaser .type-blur {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.35);
+    border-radius: 8px;
+    padding: 10px 32px;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 10px;
+    margin: 18px 0 10px;
+    filter: blur(7px);
+    user-select: none;
+    cursor: default;
+  }
+  .end-teaser .type-hint { font-size: 0.8rem; opacity: 0.65; margin-top: 4px; }
+  .end-form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .end-form-card h3 { font-size: 1rem; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+  .end-form-card .form-subtitle { font-size: 0.875rem; color: var(--text-light); margin-bottom: 22px; line-height: 1.6; }
+  .form-row { display: flex; gap: 12px; margin-bottom: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-group input {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-size: 0.9rem;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus { border-color: var(--blue); }
+  .form-group input.error { border-color: #e74c3c; }
+  .form-group input::placeholder { color: #bbb; }
+  .btn-send { width: 100%; margin-top: 10px; padding: 15px; font-size: 1rem; }
+  .send-status { text-align: center; font-size: 0.875rem; margin-top: 12px; display: none; padding: 10px; border-radius: 7px; }
+  .send-status.success { color: #27ae60; background: #eafaf1; border: 1px solid #a9dfbf; display: block; }
+  .send-status.error { color: #c0392b; background: #fdedec; border: 1px solid #f1948a; display: block; }
+  .end-cta-secondary {
+    text-align: center;
+    padding: 18px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .end-cta-secondary p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 10px; }
+  .btn-outline {
+    display: inline-block;
+    padding: 10px 28px;
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-outline:hover { background: var(--blue); color: var(--white); }
+  .end-success-screen { display: none; max-width: 600px; margin: 40px auto 0; text-align: center; }
+  .end-success-screen .success-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .end-success-screen .success-icon { font-size: 3rem; margin-bottom: 16px; }
+  .end-success-screen h2 { font-size: 1.4rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+  .end-success-screen p { font-size: 0.92rem; color: var(--text-light); line-height: 1.7; margin-bottom: 8px; }
+  .calendly-btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 15px 36px;
+    background: var(--blue);
+    color: var(--white);
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(34,83,120,0.25);
+    transition: background 0.2s, transform 0.1s;
+  }
+  .calendly-btn:hover { background: var(--blue-light); transform: translateY(-1px); }
+  @media (max-width: 560px) {
+    .form-row { flex-direction: column; }
+    .end-screen, .end-success-screen { margin-top: 20px; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>Questionnaire MBTI</h1>
+      <p class="subtitle">Découvrez votre profil de personnalité</p>
+    </div>
+    <div class="header-logo">
+      <img src="data:image/png;base64,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" alt="Hémergence" />
+    </div>
+  </div>
+</header>
+
+<div class="progress-wrapper" id="progress-wrapper" style="display:none;">
+  <div class="progress-meta">
+    <span class="progress-label" id="progress-label">Partie 1 - Questions</span>
+    <span class="progress-count" id="progress-count">Page 1 / 9</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<main>
+
+<div id="page-intro">
+  <div class="intro-prerequis">
+    <p>Avant de commencer, prenez le temps de lire attentivement l'ensemble des informations ci-dessous.<br>Elles sont essentielles pour que ce questionnaire vous soit vraiment utile.</p>
+  </div>
+  <div class="intro-device">
+    <span>Pour une expérience optimale, nous vous recommandons de compléter ce questionnaire sur un <strong>ordinateur ou une tablette</strong>. L'écran d'un smartphone, plus petit, peut rendre la lecture moins confortable et nuire à votre concentration - or celle-ci est essentielle pour répondre avec le plus de naturel possible.</span>
+  </div>
+  <div class="intro-box">
+    <p>Il n'y a pas de « Bonne » ni de « Mauvaise » réponse à ces questions. Vos réponses vont permettre d'indiquer comment, de façon naturelle, vous aimez voir et comprendre les choses, interagir avec votre entourage et prendre des décisions. En comprenant vos préférences et celles des autres, vous pourrez identifier vos points forts et axes de progrès particuliers.</p>
+    <ol>
+      <li>Lisez chaque question attentivement.</li>
+      <li>Ne passez pas trop de temps à réfléchir sur chaque question.</li>
+      <li>Pour vous aider à la réflexion, posez-vous la question de ce qui est le plus naturel pour vous, c'est-à-dire en dehors de toute contrainte familiale, professionnelle, sociale, etc. Vous pouvez par exemple vous projeter dans votre comportement d'enfance.</li>
+      <li>Si aucune réponse ne vous semble parfaite, choisissez celle qui vous correspond le plus naturellement, sans réfléchir trop longtemps.</li>
+    </ol>
+    <div class="intro-timing">
+      <span>Ce questionnaire dure environ <strong>30 minutes</strong>. Pour en tirer le meilleur bénéfice, nous vous conseillons de vous installer dans un endroit calme, à l'écart de toute source de distraction - téléphone, bruit ambiant, sollicitations extérieures - afin de vous concentrer pleinement sur vous-même.</span>
+    </div>
+  </div>
+  <div class="start-area">
+    <button class="btn btn-primary" onclick="startQuestionnaire()">Commencer le questionnaire →</button>
+  </div>
+</div>
+
+
+<!-- PAGE 1 -->
+<div class="page" id="page-1">
+  <div class="section-label"><span class="bar"></span><h2>Partie 1 - Questions</h2></div>
+
+  <div class="question-card" data-q="1">
+    <div class="question-number">Question 1</div>
+    <div class="question-text">Lorsque vous rencontrez quelqu'un pour la première fois, vous êtes naturellement plutôt</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q1" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> À l'aise pour engager la conversation et faire connaissance</label>
+      <label class="option-label"><input type="radio" name="q1" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Observateur dans un premier temps, vous prenez le temps de vous sentir à l'aise avant de vous ouvrir</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="2">
+    <div class="question-number">Question 2</div>
+    <div class="question-text">Préférez-vous que l'on vous considère comme quelqu'un de</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q2" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Pratique</label>
+      <label class="option-label"><input type="radio" name="q2" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Ingénieux</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="3">
+    <div class="question-number">Question 3</div>
+    <div class="question-text">Lorsque vous devez trancher entre deux options difficiles, ce qui vous guide en dernier recours c'est</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q3" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Ce qui vous semble le plus juste et cohérent, même si cela déçoit quelqu'un</label>
+      <label class="option-label"><input type="radio" name="q3" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Ce qui préserve au mieux les personnes concernées, même si ce n'est pas la solution la plus logique</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="4">
+    <div class="question-number">Question 4</div>
+    <div class="question-text">En accomplissant une tâche, avez-vous une tendance naturelle à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q4" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> L'organiser de manière à pouvoir terminer en avance</label>
+      <label class="option-label"><input type="radio" name="q4" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Travailler plus rapidement à la dernière minute</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="5">
+    <div class="question-number">Question 5</div>
+    <div class="question-text">Trouvez-vous</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q5" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Qu'il est facile de parler à pratiquement tout le monde de la même manière</label>
+      <label class="option-label"><input type="radio" name="q5" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Que vous n'arrivez à vous ouvrir qu'à un entourage restreint ou dans certaines circonstances</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="6">
+    <div class="question-number">Question 6</div>
+    <div class="question-text">Ce qui vous attire le plus dans un nouveau projet, c'est</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q6" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Savoir exactement ce qu'il faut faire et comment le réaliser concrètement</label>
+      <label class="option-label"><input type="radio" name="q6" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Le potentiel et les possibilités qu'il ouvre, même si tout n'est pas encore défini</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="7">
+    <div class="question-number">Question 7</div>
+    <div class="question-text">Est-ce un plus grand compliment selon vous d'être reconnue comme une personne</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q7" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">A/</span> Authentique</label>
+      <label class="option-label"><input type="radio" name="q7" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">B/</span> Toujours Raisonnable</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="8">
+    <div class="question-number">Question 8</div>
+    <div class="question-text">Suivre un programme sur le moyen/long terme est quelque chose</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q8" value="A" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">A/</span> Qui vous gêne</label>
+      <label class="option-label"><input type="radio" name="q8" value="B" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">B/</span> Qui vous plaît</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="9">
+    <div class="question-number">Question 9</div>
+    <div class="question-text">Ce qui vous est le plus confortable au quotidien, c'est plutôt</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q9" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> D'avoir des journées animées, rythmées par les échanges et les interactions</label>
+      <label class="option-label"><input type="radio" name="q9" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> D'avoir des espaces de calme et de retrait, même courts, pour vous retrouver</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="10">
+    <div class="question-number">Question 10</div>
+    <div class="question-text">Lorsque vous lisez pour votre plaisir</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q10" value="A" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">A/</span> Aimez-vous les façons inhabituelles et originales de présenter les choses</label>
+      <label class="option-label"><input type="radio" name="q10" value="B" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">B/</span> Préférez-vous que l'auteur décrive concrètement et factuellement le contexte de l'action</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(1)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-1">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 2 -->
+<div class="page" id="page-2">
+
+  <div class="question-card" data-q="11">
+    <div class="question-number">Question 11</div>
+    <div class="question-text">Lorsque vous devez prendre une décision importante, vous préférez</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q11" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Décider rapidement pour pouvoir avancer et passer à autre chose</label>
+      <label class="option-label"><input type="radio" name="q11" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Garder les options ouvertes le plus longtemps possible au cas où quelque chose de mieux se présente</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="12">
+    <div class="question-number">Question 12</div>
+    <div class="question-text">Lorsque vous commencez un grand projet qui doit être rendu la semaine prochaine</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q12" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Prenez-vous le temps de faire une liste des différentes choses à réaliser et de l'ordre dans lequel elles doivent être effectuées</label>
+      <label class="option-label"><input type="radio" name="q12" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Vous lancez-vous immédiatement</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="13">
+    <div class="question-number">Question 13</div>
+    <div class="question-text">Avez-vous tendance à entretenir</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q13" value="A" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">A/</span> Des relations profondes avec peu de monde</label>
+      <label class="option-label"><input type="radio" name="q13" value="B" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">B/</span> Des amitiés avec beaucoup de monde</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="14">
+    <div class="question-number">Question 14</div>
+    <div class="question-text">Si vous étiez enseignant, préfèreriez-vous faire un cours</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q14" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Basé sur les faits</label>
+      <label class="option-label"><input type="radio" name="q14" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Comprenant de la théorie</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="15">
+    <div class="question-number">Question 15</div>
+    <div class="question-text">Lorsque le travail d'un collègue ou d'un proche n'est pas à la hauteur, vous avez naturellement tendance à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q15" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Le lui dire clairement, même si c'est inconfortable - vous estimez que c'est lui rendre service</label>
+      <label class="option-label"><input type="radio" name="q15" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Chercher d'abord à comprendre le contexte et à formuler votre retour de façon à ne pas le blesser</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="16">
+    <div class="question-number">Question 16</div>
+    <div class="question-text">Lorsque vous vous êtes fixé un programme pour la journée ou la semaine, avez-vous tendance à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q16" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Le suivre dans les grandes lignes, quitte à l'ajuster, mais vous y tenir</label>
+      <label class="option-label"><input type="radio" name="q16" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Vous retrouver souvent à faire autre chose que ce que vous aviez prévu, porté(e) par ce qui se présente</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="17">
+    <div class="question-number">Question 17</div>
+    <div class="question-text">Lorsque vous présentez un projet ou expliquez quelque chose, vous avez naturellement tendance à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q17" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Développer au-delà de ce qui vous a été demandé - vous ajoutez du contexte, des détails, des connexions</label>
+      <label class="option-label"><input type="radio" name="q17" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Aller à l'essentiel - vous dites ce qui est nécessaire et attendez qu'on vous pose des questions si besoin</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="18">
+    <div class="question-number">Question 18</div>
+    <div class="question-text">Quand vous expliquez quelque chose à quelqu'un, vous partez naturellement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q18" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Des faits et des exemples précis</label>
+      <label class="option-label"><input type="radio" name="q18" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Du contexte général et de la vue d'ensemble</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="19">
+    <div class="question-number">Question 19</div>
+    <div class="question-text">Si vous deviez choisir, ce qui vous représente le mieux c'est d'être quelqu'un qui</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q19" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Dit les choses telles qu'elles sont, parfois au risque de paraître froid ou direct</label>
+      <label class="option-label"><input type="radio" name="q19" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Adapte sa façon de dire les choses au ressenti des autres, parfois au risque de manquer de clarté</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="20">
+    <div class="question-number">Question 20</div>
+    <div class="question-text">Préférez-vous</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q20" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Organiser des rendez-vous, des soirées, à l'avance</label>
+      <label class="option-label"><input type="radio" name="q20" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Garder la liberté de faire ce qui vous plaît le moment venu</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(2)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-2">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 3 -->
+<div class="page" id="page-3">
+
+  <div class="question-card" data-q="21">
+    <div class="question-number">Question 21</div>
+    <div class="question-text">Lorsque vous êtes dans un groupe exclusivement constitué d'inconnus lors d'une soirée</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q21" value="A" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">A/</span> Vous vous sentez mal à l'aise</label>
+      <label class="option-label"><input type="radio" name="q21" value="B" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">B/</span> Cela ne vous dérange pas du tout</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="22">
+    <div class="question-number">Question 22</div>
+    <div class="question-text">Lorsque vous apprenez quelque chose de nouveau, vous préférez naturellement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q22" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Partir des bases, comprendre les étapes une par une, dans l'ordre</label>
+      <label class="option-label"><input type="radio" name="q22" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Avoir d'abord une vue globale du sujet, puis combler les détails au fur et à mesure</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="23">
+    <div class="question-number">Question 23</div>
+    <div class="question-text">Si vous deviez réaliser quelque chose, à quel argument seriez-vous le plus sensible</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q23" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">A/</span> C'est ce que les gens attendent de vous</label>
+      <label class="option-label"><input type="radio" name="q23" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">B/</span> C'est ce qui vous semble le plus logique</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="24">
+    <div class="question-number">Question 24</div>
+    <div class="question-text">Faire les choses à la dernière minute est plutôt</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q24" value="A" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">A/</span> Votre manière de faire normale</label>
+      <label class="option-label"><input type="radio" name="q24" value="B" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">B/</span> Source de stress</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="25">
+    <div class="question-number">Question 25</div>
+    <div class="question-text">Après une longue journée bien remplie, vous ressourcez-vous plutôt</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q25" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> En passant du temps avec des amis ou de la famille</label>
+      <label class="option-label"><input type="radio" name="q25" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> En vous retrouvant seul, au calme</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="26">
+    <div class="question-number">Question 26</div>
+    <div class="question-text">Lorsque vous devez prendre une décision, vous vous appuyez naturellement sur</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q26" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Ce qui a déjà fonctionné dans des situations similaires</label>
+      <label class="option-label"><input type="radio" name="q26" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Ce que vous pressentez être la meilleure approche pour cette situation spécifique</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="27">
+    <div class="question-number">Question 27</div>
+    <div class="question-text">Dans votre façon d'aborder les situations, ce qui vous correspond le mieux c'est</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q27" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Prendre du recul et analyser les faits avant de vous laisser affecter</label>
+      <label class="option-label"><input type="radio" name="q27" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Vous laisser traverser par ce que vous ressentez - c'est une information précieuse pour vous</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="28">
+    <div class="question-number">Question 28</div>
+    <div class="question-text">Pensez-vous qu'établir un programme pour les activités quotidiennes est pour vous</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q28" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Une manière agréable et naturelle de réaliser ces activités</label>
+      <label class="option-label"><input type="radio" name="q28" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Quelque chose de désagréable et de « forcé » même quand c'est nécessaire</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="29">
+    <div class="question-number">Question 29</div>
+    <div class="question-text">Lorsque vous êtes en groupe, préférez-vous généralement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q29" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Participer à la discussion de groupe</label>
+      <label class="option-label"><input type="radio" name="q29" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Parler à une seule personne à la fois</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="30">
+    <div class="question-number">Question 30</div>
+    <div class="question-text">Ce qui vous ennuie le plus dans une tâche répétitive</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q30" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Les erreurs ou imprécisions qu'elle peut générer</label>
+      <label class="option-label"><input type="radio" name="q30" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Le manque de nouveauté et de stimulation intellectuelle</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(3)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-3">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 4 -->
+<div class="page" id="page-4">
+
+  <div class="question-card" data-q="31">
+    <div class="question-number">Question 31</div>
+    <div class="question-text">Pensez-vous que l'on dit plus facilement de vous que vous êtes</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q31" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Pas assez émotif</label>
+      <label class="option-label"><input type="radio" name="q31" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Trop émotif</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="32">
+    <div class="question-number">Question 32</div>
+    <div class="question-text">Lorsque vous avez un travail particulier à accomplir, aimez-vous naturellement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q32" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> L'organiser avec soin avant de commencer</label>
+      <label class="option-label"><input type="radio" name="q32" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Découvrir ce qui est nécessaire au fur et à mesure</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="33">
+    <div class="question-number">Question 33</div>
+    <div class="question-text">Vous avez un week-end entièrement libre et sans obligation. Spontanément, vous avez plutôt envie de</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q33" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Prévoir des sorties, voir du monde, remplir ce temps</label>
+      <label class="option-label"><input type="radio" name="q33" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Profiter de ce temps pour vous, sans agenda ni sollicitations</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="34">
+    <div class="question-number">Question 34</div>
+    <div class="question-text">Lorsqu'une tension s'installe avec quelqu'un qui vous est cher, vous avez tendance à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q34" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Préférer mettre les choses à plat rapidement, même si c'est inconfortable</label>
+      <label class="option-label"><input type="radio" name="q34" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Laisser passer du temps, éviter l'affrontement direct pour préserver la relation</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="35">
+    <div class="question-number">Question 35</div>
+    <div class="question-text">Laisser quelque chose d'inachevé - un projet, une conversation, une tâche - vous</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q35" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Pèse - vous avez du mal à passer à autre chose tant que ce n'est pas terminé</label>
+      <label class="option-label"><input type="radio" name="q35" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Ne pose pas de problème particulier - vous revenez dessus quand le moment est venu</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="36">
+    <div class="question-number">Question 36</div>
+    <div class="question-text">Pour vous, une soirée réussie c'est</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q36" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Rencontrer des nouvelles personnes, échanger avec beaucoup de monde</label>
+      <label class="option-label"><input type="radio" name="q36" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Avoir une vraie conversation approfondie avec une ou deux personnes</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="37">
+    <div class="question-number">Question 37</div>
+    <div class="question-text">Lorsque vous abordez une tâche que d'autres ont déjà réalisée avant vous, vous préférez naturellement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q37" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Vous appuyer sur les méthodes qui ont fait leurs preuves</label>
+      <label class="option-label"><input type="radio" name="q37" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Chercher votre propre approche, même si cela prend plus de temps</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="38">
+    <div class="question-number">Question 38</div>
+    <div class="question-text">Vous devez annoncer une décision difficile à quelqu'un que cela va décevoir. Vous allez naturellement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q38" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Expliquer clairement les raisons objectives qui ont motivé cette décision</label>
+      <label class="option-label"><input type="radio" name="q38" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Prendre soin de la façon dont vous l'annoncez pour minimiser l'impact émotionnel</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="39">
+    <div class="question-number">Question 39</div>
+    <div class="question-text">Face à un projet dont les contours ne sont pas encore définis</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q39" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Cela vous met mal à l'aise - vous avez besoin de cadre pour avancer</label>
+      <label class="option-label"><input type="radio" name="q39" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Vous trouvez ça stimulant - vous aimez construire au fur et à mesure</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="40">
+    <div class="question-number">Question 40</div>
+    <div class="question-text">Lorsque vous traversez une période difficile, vous avez plutôt tendance à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q40" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> En parler à plusieurs personnes de votre entourage - cela vous aide à y voir clair</label>
+      <label class="option-label"><input type="radio" name="q40" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Gérer cela intérieurement, ou en parler seulement à une personne de confiance</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(4)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-4">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 5 -->
+<div class="page" id="page-5">
+
+  <div class="question-card" data-q="41">
+    <div class="question-number">Question 41</div>
+    <div class="question-text">Dans une équipe de travail, ce qui vous semble le plus important c'est</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q41" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Que chacun soit efficace et que les objectifs soient atteints</label>
+      <label class="option-label"><input type="radio" name="q41" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Que les relations soient bonnes et que chacun se sente bien</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="42">
+    <div class="question-number">Question 42</div>
+    <div class="question-text">Parmi vos amis, êtes-vous</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q42" value="A" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">A/</span> Un des derniers à apprendre ce qui se passe</label>
+      <label class="option-label"><input type="radio" name="q42" value="B" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">B/</span> Au courant de tout sur tout le monde</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="43">
+    <div class="question-number">Question 43</div>
+    <div class="question-text">Diriez-vous que</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q43" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Les procédures vous viennent plus naturellement</label>
+      <label class="option-label"><input type="radio" name="q43" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> La variété vous vient plus naturellement</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="44">
+    <div class="question-number">Question 44</div>
+    <div class="question-text">Dans votre façon d'évaluer une situation, ce que vous considérez comme fiable en premier c'est</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q44" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Les données, les faits, ce qui peut être vérifié objectivement</label>
+      <label class="option-label"><input type="radio" name="q44" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Ce que vous ressentez sur la situation - votre lecture humaine et intuitive</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="45">
+    <div class="question-number">Question 45</div>
+    <div class="question-text">Dans une réunion ou un groupe de travail, vous êtes plutôt du genre à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q45" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Prendre la parole dès qu'une idée vous vient, en la construisant tout en parlant</label>
+      <label class="option-label"><input type="radio" name="q45" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Attendre d'avoir une idée bien construite avant de la partager</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="46">
+    <div class="question-number">Question 46</div>
+    <div class="question-text">Lorsque vous réalisez que vous avez fait une erreur, votre premier mouvement naturel est de</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q46" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Comprendre méthodiquement ce qui s'est passé et corriger</label>
+      <label class="option-label"><input type="radio" name="q46" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Passer rapidement à autre chose et vous adapter à la nouvelle situation</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="47">
+    <div class="question-number">Question 47</div>
+    <div class="question-text">Lorsque vous êtes face à quelqu'un qui vous traite de manière injuste, votre réaction première est</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q47" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> D'analyser les faits pour déterminer objectivement si c'est réellement injuste, puis d'agir en conséquence</label>
+      <label class="option-label"><input type="radio" name="q47" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> De ressentir immédiatement la blessure, même si vous ne l'exprimez pas forcément</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="48">
+    <div class="question-number">Question 48</div>
+    <div class="question-text">Lorsque quelqu'un vous pose une question qui demande réflexion, vous avez naturellement tendance à</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q48" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Réfléchir à voix haute, en construisant votre réponse au fil de la conversation</label>
+      <label class="option-label"><input type="radio" name="q48" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Prendre un temps intérieur avant de répondre, même si cela crée un silence</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="49">
+    <div class="question-number">Question 49</div>
+    <div class="question-text">Les personnes qui vous connaissent bien diraient plutôt de vous que</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q49" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Vous pensez en parlant - vos idées évoluent au fil de la conversation, ce qui peut vous faire paraître changeant(e) sur un même sujet</label>
+      <label class="option-label"><input type="radio" name="q49" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Vous prenez le temps de réfléchir avant de vous exprimer, mais quand vous parlez, votre position est claire et arrêtée</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="50">
+    <div class="question-number">Question 50</div>
+    <div class="question-text">En général</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q50" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">A/</span> Le sentiment a-t-il pour vous plus de valeur que la logique</label>
+      <label class="option-label"><input type="radio" name="q50" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">B/</span> La logique plus que le sentiment</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(5)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-5">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 6 -->
+<div class="page" id="page-6">
+  <div class="section-label"><span class="bar"></span><h2>Partie 2 - Paires de mots</h2></div>
+  <p class="section-instruction">Quel est le mot de chaque couple qui vous correspond naturellement le plus ? Pensez au sens du mot plutôt qu'à son apparence ou à sa sonorité.</p>
+
+  <div class="question-card  word-pair-card" data-q="51">
+    <div class="question-number">Question 51</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q51" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span>Parler</label>
+      <label class="option-label"><input type="radio" name="q51" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span>Écrire</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="52">
+    <div class="question-number">Question 52</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q52" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span>Exposer des faits</label>
+      <label class="option-label"><input type="radio" name="q52" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span>Concept</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="53">
+    <div class="question-number">Question 53</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q53" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span>Apprécié(e)</label>
+      <label class="option-label"><input type="radio" name="q53" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span>Respecté(e)</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="54">
+    <div class="question-number">Question 54</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q54" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span>Prévisible</label>
+      <label class="option-label"><input type="radio" name="q54" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span>Adaptable</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="55">
+    <div class="question-number">Question 55</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q55" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span>Réseau</label>
+      <label class="option-label"><input type="radio" name="q55" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span>Intimité</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="56">
+    <div class="question-number">Question 56</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q56" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span>Expérience</label>
+      <label class="option-label"><input type="radio" name="q56" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span>Imagination</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="57">
+    <div class="question-number">Question 57</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q57" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span>Moral</label>
+      <label class="option-label"><input type="radio" name="q57" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span>Légal</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="58">
+    <div class="question-number">Question 58</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q58" value="A" data-dim="EI" data-side="I"><span class="radio-circle"></span>Calme</label>
+      <label class="option-label"><input type="radio" name="q58" value="B" data-dim="EI" data-side="E"><span class="radio-circle"></span>Animé</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="59">
+    <div class="question-number">Question 59</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q59" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span>Construire</label>
+      <label class="option-label"><input type="radio" name="q59" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span>Inventer</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="60">
+    <div class="question-number">Question 60</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q60" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span>Objectiver</label>
+      <label class="option-label"><input type="radio" name="q60" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span>Ressentir</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="61">
+    <div class="question-number">Question 61</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q61" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span>Planifié</label>
+      <label class="option-label"><input type="radio" name="q61" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span>Spontané</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="62">
+    <div class="question-number">Question 62</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q62" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span>Concret</label>
+      <label class="option-label"><input type="radio" name="q62" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span>Abstrait</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="63">
+    <div class="question-number">Question 63</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q63" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span>Avantages</label>
+      <label class="option-label"><input type="radio" name="q63" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span>Bienfaits</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(6)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-6">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 7 -->
+<div class="page" id="page-7">
+
+  <div class="question-card  word-pair-card" data-q="64">
+    <div class="question-number">Question 64</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q64" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span>Structuré</label>
+      <label class="option-label"><input type="radio" name="q64" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span>Flexible</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="65">
+    <div class="question-number">Question 65</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q65" value="A" data-dim="EI" data-side="I"><span class="radio-circle"></span>Réservé</label>
+      <label class="option-label"><input type="radio" name="q65" value="B" data-dim="EI" data-side="E"><span class="radio-circle"></span>Loquace</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="66">
+    <div class="question-number">Question 66</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q66" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span>Précision</label>
+      <label class="option-label"><input type="radio" name="q66" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span>Inspiration</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="67">
+    <div class="question-number">Question 67</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q67" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span>Critique</label>
+      <label class="option-label"><input type="radio" name="q67" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span>Empathie</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="68">
+    <div class="question-number">Question 68</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q68" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span>Sens propre</label>
+      <label class="option-label"><input type="radio" name="q68" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span>Sens figuré</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="69">
+    <div class="question-number">Question 69</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q69" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span>Doux</label>
+      <label class="option-label"><input type="radio" name="q69" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span>Dur</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="70">
+    <div class="question-number">Question 70</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q70" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span>Production</label>
+      <label class="option-label"><input type="radio" name="q70" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span>Conception</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="71">
+    <div class="question-number">Question 71</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q71" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span>Débattre</label>
+      <label class="option-label"><input type="radio" name="q71" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span>Méditer</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="72">
+    <div class="question-number">Question 72</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q72" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span>Démontrer</label>
+      <label class="option-label"><input type="radio" name="q72" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span>Imaginer</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="73">
+    <div class="question-number">Question 73</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q73" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span>Abouti</label>
+      <label class="option-label"><input type="radio" name="q73" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span>Ouvert</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="74">
+    <div class="question-number">Question 74</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q74" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span>Décidé</label>
+      <label class="option-label"><input type="radio" name="q74" value="B" data-dim="JP" data-side="F"><span class="radio-circle"></span>Chaleureux</label>
+    </div>
+  </div>
+
+  <div class="question-card  word-pair-card" data-q="75">
+    <div class="question-number">Question 75</div>
+    <div class="options word-pair">
+      <label class="option-label"><input type="radio" name="q75" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span>Objectif</label>
+      <label class="option-label"><input type="radio" name="q75" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span>Bienveillant</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(7)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-7">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 8 -->
+<div class="page" id="page-8">
+  <div class="section-label"><span class="bar"></span><h2>Partie 3 - Concepts</h2></div>
+  <p class="section-instruction">Pour chaque concept, choisissez les notions qui vous représentent le plus de façon naturelle. Pensez au sens des mots plutôt qu'à leur apparence ou à leur sonorité.</p>
+
+  <div class="question-card" data-q="76">
+    <div class="question-number">Question 76</div>
+    <div class="concept-title">Open space</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q76" value="A" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">A/</span> Difficulté de concentration</label>
+      <label class="option-label"><input type="radio" name="q76" value="B" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">B/</span> Opportunité d'interaction</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="77">
+    <div class="question-number">Question 77</div>
+    <div class="concept-title">Notice de Meuble Ikéa</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q77" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Indispensable à suivre</label>
+      <label class="option-label"><input type="radio" name="q77" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Présente selon le besoin</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="78">
+    <div class="question-number">Question 78</div>
+    <div class="concept-title">Feedback</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q78" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> La précision et l'honnêteté, même si le message est difficile à entendre</label>
+      <label class="option-label"><input type="radio" name="q78" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> L'impact émotionnel que cela aura sur la personne</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="79">
+    <div class="question-number">Question 79</div>
+    <div class="concept-title">Vacances</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q79" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Organisation</label>
+      <label class="option-label"><input type="radio" name="q79" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Liberté</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="80">
+    <div class="question-number">Question 80</div>
+    <div class="concept-title">Soirée idéale</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q80" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Beaucoup de monde, plein d'échanges</label>
+      <label class="option-label"><input type="radio" name="q80" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Peu de personnes, conversations profondes</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="81">
+    <div class="question-number">Question 81</div>
+    <div class="concept-title">Faire une tâche quelconque</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q81" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> D'abord essayer</label>
+      <label class="option-label"><input type="radio" name="q81" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> D'abord réfléchir</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="82">
+    <div class="question-number">Question 82</div>
+    <div class="concept-title">Réussite d'une équipe</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q82" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Atteindre les objectifs fixés</label>
+      <label class="option-label"><input type="radio" name="q82" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Que chacun se soit senti valorisé</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="83">
+    <div class="question-number">Question 83</div>
+    <div class="concept-title">Changement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q83" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Quelque chose qui demande à être anticipé et géré</label>
+      <label class="option-label"><input type="radio" name="q83" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Quelque chose qui ouvre de nouvelles possibilités</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="84">
+    <div class="question-number">Question 84</div>
+    <div class="concept-title">Nouveau projet</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q84" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Feuille de route claire dès le départ</label>
+      <label class="option-label"><input type="radio" name="q84" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Espace pour explorer et improviser</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="85">
+    <div class="question-number">Question 85</div>
+    <div class="concept-title">Idée nouvelle</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q85" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Intéressante si elle est applicable concrètement</label>
+      <label class="option-label"><input type="radio" name="q85" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Stimulante en elle-même, même sans application immédiate</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="nextPage(8)">Suivant →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-8">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+<!-- PAGE 9 -->
+<div class="page" id="page-9">
+
+  <div class="question-card" data-q="86">
+    <div class="question-number">Question 86</div>
+    <div class="concept-title">Résoudre un problème</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q86" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Méthode</label>
+      <label class="option-label"><input type="radio" name="q86" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Improvisation</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="87">
+    <div class="question-number">Question 87</div>
+    <div class="concept-title">Divergence d'opinion</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q87" value="A" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">A/</span> Recherche d'Harmonie</label>
+      <label class="option-label"><input type="radio" name="q87" value="B" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">B/</span> Recherche de la Vérité</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="88">
+    <div class="question-number">Question 88</div>
+    <div class="concept-title">Courses en magasin</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q88" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Liste préétablie</label>
+      <label class="option-label"><input type="radio" name="q88" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Selon envie dans les rayons</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="89">
+    <div class="question-number">Question 89</div>
+    <div class="concept-title">Réunion</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q89" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Expression spontanée</label>
+      <label class="option-label"><input type="radio" name="q89" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Attend son tour pour parler</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="90">
+    <div class="question-number">Question 90</div>
+    <div class="concept-title">Réflexion</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q90" value="A" data-dim="SN" data-side="S"><span class="radio-circle"></span><span class="option-letter">A/</span> Se centre sur le réel</label>
+      <label class="option-label"><input type="radio" name="q90" value="B" data-dim="SN" data-side="N"><span class="radio-circle"></span><span class="option-letter">B/</span> Se laisse naturellement emporté par l'imagination</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="91">
+    <div class="question-number">Question 91</div>
+    <div class="concept-title">Ressourcement</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q91" value="A" data-dim="EI" data-side="E"><span class="radio-circle"></span><span class="option-letter">A/</span> Voir du monde, être entouré</label>
+      <label class="option-label"><input type="radio" name="q91" value="B" data-dim="EI" data-side="I"><span class="radio-circle"></span><span class="option-letter">B/</span> Se retrouver seul, au calme</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="92">
+    <div class="question-number">Question 92</div>
+    <div class="concept-title">Critique reçue</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q92" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Un retour utile si elle est fondée sur des faits</label>
+      <label class="option-label"><input type="radio" name="q92" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Quelque chose qui touche d'abord la personne avant le travail</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="93">
+    <div class="question-number">Question 93</div>
+    <div class="concept-title">Reconnaissance</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q93" value="A" data-dim="TF" data-side="T"><span class="radio-circle"></span><span class="option-letter">A/</span> Obtenir un résultat concret et mesurable</label>
+      <label class="option-label"><input type="radio" name="q93" value="B" data-dim="TF" data-side="F"><span class="radio-circle"></span><span class="option-letter">B/</span> Avoir contribué à quelque chose qui avait du sens pour les personnes impliquées</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="94">
+    <div class="question-number">Question 94</div>
+    <div class="concept-title">Agenda chargé</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q94" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Rassurant - vous savez où vous allez</label>
+      <label class="option-label"><input type="radio" name="q94" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> Oppressant - vous avez besoin d'espace libre</label>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="95">
+    <div class="question-number">Question 95</div>
+    <div class="concept-title">Au quotidien</div>
+    <div class="options">
+      <label class="option-label"><input type="radio" name="q95" value="A" data-dim="JP" data-side="J"><span class="radio-circle"></span><span class="option-letter">A/</span> Travail fini avant les Loisirs</label>
+      <label class="option-label"><input type="radio" name="q95" value="B" data-dim="JP" data-side="P"><span class="radio-circle"></span><span class="option-letter">B/</span> L'un et l'autre ne sont pas incompatibles</label>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-secondary" onclick="prevPage()">← Précédent</button>
+    <button class="btn btn-primary" onclick="submitQuestionnaire()">Voir mes résultats →</button>
+  </div>
+  <p class="unanswered-msg" id="msg-9">Merci de répondre à toutes les questions avant de continuer.</p>
+</div>
+
+<div id="page-results">
+
+  <!-- Écran formulaire -->
+  <div class="end-screen" id="end-form-screen">
+
+    <!-- Teaser avec type flouté -->
+    <div class="end-teaser">
+      <h2>Votre questionnaire est terminé !</h2>
+      <p>Votre profil de personnalité apparent a été calculé. Pour le découvrir et comprendre ce qu'il révèle sur vous, réservez votre échange de découverte gratuit avec Édouard, votre praticien Hémergence.</p>
+      <div class="type-blur" id="type-blurred">XXXX</div>
+      <p class="type-hint">Votre profil vous sera révélé lors de votre échange personnalisé</p>
+    </div>
+
+    <!-- Formulaire de collecte -->
+    <div class="end-form-card">
+      <h3>Renseignez vos coordonnées</h3>
+      <p class="form-subtitle">Laissez vos informations ci-dessous. Vous recevrez immédiatement un email de confirmation et Édouard reviendra vers vous pour organiser votre échange de découverte.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="field-prenom">Prénom *</label>
+          <input type="text" id="field-prenom" placeholder="Votre prénom" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label for="field-nom">Nom *</label>
+          <input type="text" id="field-nom" placeholder="Votre nom" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="field-email">Email *</label>
+        <input type="email" id="field-email" placeholder="votre@email.com" autocomplete="email">
+      </div>
+
+      <button class="btn btn-primary btn-send" id="btn-send" onclick="sendResults()">
+        Envoyer et réserver mon échange →
+      </button>
+      <div class="send-status" id="send-status"></div>
+    </div>
+
+    <!-- CTA secondaire -->
+    <div class="end-cta-secondary">
+      <p>Vous souhaitez en savoir plus sur la démarche Hémergence ?</p>
+      <a href="https://hemergence.com" target="_blank" class="btn-outline">Découvrir Hémergence</a>
+    </div>
+
+  </div>
+
+  <!-- Écran succès après envoi -->
+  <div class="end-success-screen" id="end-success-screen">
+    <div class="success-card">
+      <div class="success-icon">✓</div>
+      <h2>C'est envoyé !</h2>
+      <p>Merci <strong id="success-prenom"></strong>, vos informations ont bien été transmises à Édouard.</p>
+      <p>Un email de confirmation vient de vous être envoyé. Édouard reviendra vers vous très prochainement pour organiser votre échange de découverte.</p>
+      <p style="margin-top:16px;">En attendant, vous pouvez d'ores et déjà réserver votre créneau en ligne :</p>
+      <a href="https://calendly.com/edouard-houyelle-hemergence" target="_blank" class="calendly-btn">
+        Réserver mon échange de découverte →
+      </a>
+    </div>
+    <div class="end-cta-secondary">
+      <p>Vous souhaitez en savoir plus sur la démarche Hémergence ?</p>
+      <a href="https://hemergence.com" target="_blank" class="btn-outline">Découvrir Hémergence</a>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<script>
+  const TOTAL_PAGES = 9;
+  const PAGE_LABELS = [
+    'Partie 1 - Questions','Partie 1 - Questions','Partie 1 - Questions',
+    'Partie 1 - Questions','Partie 1 - Questions',
+    'Partie 2 - Paires de mots','Partie 2 - Paires de mots',
+    'Partie 3 - Concepts','Partie 3 - Concepts'
+  ];
+  const PAGE_QUESTIONS = {
+    1:[1,2,3,4,5,6,7,8,9,10],
+    2:[11,12,13,14,15,16,17,18,19,20],
+    3:[21,22,23,24,25,26,27,28,29,30],
+    4:[31,32,33,34,35,36,37,38,39,40],
+    5:[41,42,43,44,45,46,47,48,49,50],
+    6:[51,52,53,54,55,56,57,58,59,60,61,62,63],
+    7:[64,65,66,67,68,69,70,71,72,73,74,75],
+    8:[76,77,78,79,80,81,82,83,84,85],
+    9:[86,87,88,89,90,91,92,93,94,95]
+  };
+  let currentPage = 0;
+
+  document.querySelectorAll('input[type="radio"]').forEach(r => {
+    r.addEventListener('change', () => {
+      const card = r.closest('.question-card');
+      if (card) card.classList.add('answered');
+    });
+  });
+
+  function startQuestionnaire() {
+    document.getElementById('page-intro').style.display = 'none';
+    document.getElementById('progress-wrapper').style.display = 'block';
+    goToPage(1);
+  }
+
+  function goToPage(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-results').style.display = 'none';
+    currentPage = n;
+    const page = document.getElementById('page-' + n);
+    if (page) { page.classList.add('active'); updateProgress(n); window.scrollTo({top:0,behavior:'smooth'}); }
+  }
+
+  function nextPage(fromPage) {
+    const qs = PAGE_QUESTIONS[fromPage];
+    const unanswered = qs.filter(q => !Array.from(document.querySelectorAll(`input[name="q${q}"]`)).some(r => r.checked));
+    const msg = document.getElementById('msg-' + fromPage);
+    if (unanswered.length > 0) {
+      msg.style.display = 'block';
+      const firstCard = document.querySelector(`[data-q="${unanswered[0]}"]`);
+      if (firstCard) firstCard.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    msg.style.display = 'none';
+    goToPage(fromPage + 1);
+  }
+
+  function prevPage() { if (currentPage > 1) goToPage(currentPage - 1); }
+
+  function updateProgress(pageNum) {
+    const pct = ((pageNum - 1) / TOTAL_PAGES) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = PAGE_LABELS[pageNum - 1];
+    document.getElementById('progress-count').textContent = 'Page ' + pageNum + ' / ' + TOTAL_PAGES;
+  }
+
+  // ── EmailJS config ──
+  // REMPLACEZ ces 3 valeurs par vos identifiants EmailJS
+  const EMAILJS_PUBLIC_KEY   = "MmJAr5_gNEw4KikUc";
+  const EMAILJS_SERVICE_ID   = "service_aeprop7";
+  const EMAILJS_TPL_VOUS     = "4hqcink";   // template email -> vous
+  const EMAILJS_TPL_PERSONNE = "zlfvejs";       // template email -> la personne
+
+  // Stockage des scores calculés
+  let mbtiScores = {};
+  let mbtiType = "";
+
+  function submitQuestionnaire() {
+    const qs = PAGE_QUESTIONS[9];
+    const unanswered = qs.filter(q => !Array.from(document.querySelectorAll(`input[name="q${q}"]`)).some(r => r.checked));
+    const msg = document.getElementById('msg-9');
+    if (unanswered.length > 0) {
+      msg.style.display = 'block';
+      const firstCard = document.querySelector(`[data-q="${unanswered[0]}"]`);
+      if (firstCard) firstCard.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    msg.style.display = 'none';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('progress-fill').style.width = '100%';
+    document.getElementById('progress-label').textContent = 'Résultats';
+    document.getElementById('progress-count').textContent = 'Terminé';
+
+    // Calcul des scores
+    mbtiScores = {E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+    document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+      const side = r.dataset.side;
+      if (side && mbtiScores.hasOwnProperty(side)) mbtiScores[side]++;
+    });
+
+    const totalEI = mbtiScores.E + mbtiScores.I;
+    const totalSN = mbtiScores.S + mbtiScores.N;
+    const totalTF = mbtiScores.T + mbtiScores.F;
+    const totalJP = mbtiScores.J + mbtiScores.P;
+
+    mbtiType =
+      (mbtiScores.E >= mbtiScores.I ? 'E' : 'I') +
+      (mbtiScores.S >= mbtiScores.N ? 'S' : 'N') +
+      (mbtiScores.T >= mbtiScores.F ? 'T' : 'F') +
+      (mbtiScores.J >= mbtiScores.P ? 'J' : 'P');
+
+    // Affiche l'écran de fin avec type flouté
+    document.getElementById('type-blurred').textContent = mbtiType;
+    document.getElementById('page-results').style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function sendResults() {
+    const prenom = document.getElementById('field-prenom').value.trim();
+    const nom    = document.getElementById('field-nom').value.trim();
+    const email  = document.getElementById('field-email').value.trim();
+    const status = document.getElementById('send-status');
+
+    // Validation
+    let valid = true;
+    ['field-prenom','field-nom','field-email'].forEach(id => {
+      document.getElementById(id).classList.remove('error');
+    });
+    if (!prenom) { document.getElementById('field-prenom').classList.add('error'); valid = false; }
+    if (!nom)    { document.getElementById('field-nom').classList.add('error');    valid = false; }
+    if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
+      document.getElementById('field-email').classList.add('error'); valid = false;
+    }
+    if (!valid) {
+      status.className = 'send-status error';
+      status.textContent = 'Merci de remplir tous les champs correctement.';
+      return;
+    }
+
+    const btn = document.getElementById('btn-send');
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+    status.className = 'send-status';
+    status.style.display = 'none';
+
+    const totalEI = mbtiScores.E + mbtiScores.I;
+    const totalSN = mbtiScores.S + mbtiScores.N;
+    const totalTF = mbtiScores.T + mbtiScores.F;
+    const totalJP = mbtiScores.J + mbtiScores.P;
+
+    const pctE = totalEI > 0 ? Math.round(mbtiScores.E / totalEI * 100) : 50;
+    const pctI = 100 - pctE;
+    const pctS = totalSN > 0 ? Math.round(mbtiScores.S / totalSN * 100) : 50;
+    const pctN = 100 - pctS;
+    const pctT = totalTF > 0 ? Math.round(mbtiScores.T / totalTF * 100) : 50;
+    const pctF = 100 - pctT;
+    const pctJ = totalJP > 0 ? Math.round(mbtiScores.J / totalJP * 100) : 50;
+    const pctP = 100 - pctJ;
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+
+    // Initialisation EmailJS
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    // Email 1 -> Édouard (résultats complets)
+    const paramsVous = {
+      prenom_personne:  prenom,
+      nom_personne:     nom,
+      email_personne:   email,
+      type_mbti:        mbtiType,
+      score_EI:         `E: ${pctE}% / I: ${pctI}%`,
+      score_SN:         `S: ${pctS}% / N: ${pctN}%`,
+      score_TF:         `T: ${pctT}% / F: ${pctF}%`,
+      score_JP:         `J: ${pctJ}% / P: ${pctP}%`,
+      date_passation:   dateStr,
+      lien_calendly:    'https://calendly.com/edouard-houyelle-hemergence'
+    };
+
+    // Email 2 -> La personne (remerciement)
+    const paramsPersonne = {
+      prenom_personne:  prenom,
+      nom_personne:     nom,
+      email_personne:   email,
+      lien_calendly:    'https://calendly.com/edouard-houyelle-hemergence',
+      lien_site:        'https://hemergence.com'
+    };
+
+    Promise.all([
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TPL_VOUS,     paramsVous),
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TPL_PERSONNE, paramsPersonne)
+    ])
+    .then(() => {
+      // Succès - affiche l'écran de succès
+      document.getElementById('success-prenom').textContent = prenom;
+      document.getElementById('end-form-screen').style.display = 'none';
+      document.getElementById('end-success-screen').style.display = 'block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    })
+    .catch((err) => {
+      console.error('EmailJS error:', err);
+      btn.disabled = false;
+      btn.textContent = 'Envoyer et réserver mon échange →';
+      status.className = 'send-status error';
+      status.textContent = 'Une erreur est survenue. Merci de réessayer ou de contacter directement edouard.houyelle@hemergence.com';
+    });
+  }
+</script>
+</body>
+</html>
