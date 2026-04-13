@@ -1232,7 +1232,7 @@
       </div>
 
       <button class="btn btn-primary btn-send" id="btn-send" onclick="sendResults()">
-        Envoyer et réserver mon échange →
+        Envoyer mes réponses →
       </button>
       <div class="send-status" id="send-status"></div>
     </div>
@@ -1250,7 +1250,7 @@
     <div class="success-card">
       <div class="success-icon">✓</div>
       <h2>C'est envoyé !</h2>
-      <p>Merci <strong id="success-prenom"></strong>, vos informations ont bien été transmises à Édouard.</p>
+      <p>Merci <strong id="success-prenom"></strong>, vos réponses ont bien été transmises à Édouard, notre praticien certifié MBTI.</p>
       <p>Un email de confirmation vient de vous être envoyé. Édouard reviendra vers vous très prochainement pour organiser votre échange de découverte.</p>
       <p style="margin-top:16px;">En attendant, vous pouvez d'ores et déjà réserver votre créneau en ligne :</p>
       <a href="https://calendly.com/edouard-houyelle-hemergence" target="_blank" class="calendly-btn">
@@ -1468,7 +1468,7 @@
     .catch((err) => {
       console.error('EmailJS error:', err);
       btn.disabled = false;
-      btn.textContent = 'Envoyer et réserver mon échange →';
+      btn.textContent = 'Envoyer mes réponses →';
       status.className = 'send-status error';
       status.textContent = 'Une erreur est survenue. Merci de réessayer ou de contacter directement edouard.houyelle@hemergence.com';
     });
