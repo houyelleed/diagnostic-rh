@@ -139,12 +139,48 @@
   .result-type { text-align: center; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); }
   .type-code { font-size: 2.2rem; font-weight: 800; color: var(--blue); letter-spacing: 6px; }
 
-  @media (max-width: 560px) {
-    header { padding: 24px 18px 20px; } header h1 { font-size: 1.5rem; }
-    .progress-wrapper { padding: 12px 18px; } main { padding: 0 12px 40px; }
-    .question-card { padding: 16px 14px; } .word-pair { flex-direction: column; }
-    .nav-area { flex-direction: column-reverse; } .btn { width: 100%; text-align: center; }
-    .header-logo img { height: 44px; }
+  @media (max-width: 600px) {
+    header { padding: 20px 16px; }
+    header h1 { font-size: 1.3rem; }
+    .header-logo img { height: 38px; }
+    .progress-wrapper { padding: 10px 14px; }
+    main { padding: 0 10px 40px; }
+
+    /* Intro */
+    .intro-welcome h2 { font-size: 1.15rem; }
+    .intro-welcome p { font-size: 0.875rem; text-align: left; }
+    .intro-prerequis { padding: 16px 16px; }
+    .intro-prerequis p { font-size: 0.9rem; }
+    .intro-device { font-size: 0.82rem; text-align: left; }
+    .intro-box { padding: 16px 14px; font-size: 0.875rem; text-align: left; }
+    .intro-timing { font-size: 0.82rem; text-align: left; }
+
+    /* Questions */
+    .section-label { margin: 20px 0 12px; }
+    .section-instruction { font-size: 0.82rem; padding: 10px 12px; text-align: left; }
+    .question-card { padding: 12px 12px; margin-bottom: 8px; }
+    .question-number { font-size: 0.7rem; margin-bottom: 6px; }
+    .question-text { font-size: 0.875rem; margin-bottom: 10px; line-height: 1.45; }
+    .option-label { padding: 8px 10px; font-size: 0.82rem; gap: 8px; }
+    .option-letter { min-width: 14px; font-size: 0.82rem; }
+    .concept-title { font-size: 0.78rem; }
+
+    /* Word pairs */
+    .word-pair { flex-direction: row; gap: 8px; }
+    .word-pair .option-label { padding: 6px 8px; font-size: 0.82rem; }
+    .word-pair-card { padding: 8px 12px !important; }
+
+    /* Nav */
+    .nav-area { flex-direction: column-reverse; gap: 8px; margin-top: 20px; }
+    .btn { width: 100%; text-align: center; padding: 12px 20px; font-size: 0.875rem; }
+
+    /* End screen */
+    .end-screen, .end-success-screen { margin-top: 16px; }
+    .end-teaser { padding: 24px 18px; }
+    .end-teaser h2 { font-size: 1.2rem; }
+    .end-form-card { padding: 20px 16px; }
+    .form-row { flex-direction: column; }
+    .end-cta-secondary { padding: 14px; }
   }
 
   /* ── ÉCRAN DE FIN ── */
