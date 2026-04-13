@@ -1339,6 +1339,9 @@
   const EMAILJS_TPL_VOUS     = "4hqcink";   // template email -> vous
   const EMAILJS_TPL_PERSONNE = "zlfvejs";       // template email -> la personne
 
+  // Initialisation EmailJS au chargement
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
   // Stockage des scores calculés
   let mbtiScores = {};
   let mbtiType = "";
@@ -1427,9 +1430,6 @@
 
     const now = new Date();
     const dateStr = now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
-
-    // Initialisation EmailJS
-    emailjs.init(EMAILJS_PUBLIC_KEY);
 
     // Email 1 -> Édouard (résultats complets)
     const paramsVous = {
