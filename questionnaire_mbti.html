@@ -36,7 +36,35 @@
 
   /* INTRO */
   #page-intro { display: block; }
-  .intro-prerequis { background: var(--white); border: 3px solid var(--blue); border-radius: var(--radius); padding: 22px 28px; margin: 30px 0 0; text-align: center; }
+  .intro-welcome {
+    margin: 30px 0 0;
+    text-align: center;
+  }
+  .intro-welcome h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--blue);
+    line-height: 1.4;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .intro-welcome h2 span {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--blue-light);
+    letter-spacing: 0.2px;
+    margin-top: 4px;
+  }
+  .intro-welcome p {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.75;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: justify;
+  }
+  .intro-prerequis { background: var(--white); border: 3px solid var(--blue); border-radius: var(--radius); padding: 22px 28px; margin: 20px 0 0; text-align: center; }
   .intro-prerequis p { color: var(--blue); font-size: 1.1rem; font-weight: 700; line-height: 1.6; letter-spacing: 0.1px; }
   .intro-device { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin: 10px 0 0; font-size: 0.88rem; color: var(--text-light); line-height: 1.65; display: flex; gap: 12px; align-items: flex-start; text-align: justify; }
   .intro-box { background: var(--blue-pale); border-left: 5px solid var(--blue); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin: 14px 0 0; font-size: 0.93rem; line-height: 1.7; color: var(--text); text-align: justify; }
@@ -257,6 +285,13 @@
 <main>
 
 <div id="page-intro">
+  <div class="intro-welcome">
+    <h2>Bienvenue dans votre questionnaire MBTI Hémergence
+      <span>conçu par notre praticien certifié MBTI</span>
+    </h2>
+    <p>Ce questionnaire vous permettra d'identifier vos préférences naturelles de fonctionnement - votre façon de puiser votre énergie, de percevoir et comprendre les choses, de prendre vos décisions et de vous organiser au quotidien - et de mieux comprendre votre impact dans vos relations avec les autres.</p>
+  </div>
+
   <div class="intro-prerequis">
     <p>Avant de commencer, prenez le temps de lire attentivement l'ensemble des informations ci-dessous.<br>Elles sont essentielles pour que ce questionnaire vous soit vraiment utile.</p>
   </div>
